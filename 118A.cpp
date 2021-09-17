@@ -3,8 +3,9 @@
 using namespace std;
 
 int main(){
-    //freopen("input.txt","r",stdin);
-    cout << _DEBUG;
+#if defined(_LBY)
+    freopen("input.txt","r",stdin);
+#endif
 
     string s,res;
     cin >> s;
