@@ -5,7 +5,7 @@ using namespace std;
 int main(){
 #ifdef _LBY
     freopen("input.txt","r",stdin);
-    //freopen("output.txt","w",stdout);
+    freopen("output.txt","w",stdout);
 #endif
 
     string s;
