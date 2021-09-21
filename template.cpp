@@ -16,6 +16,5 @@ int main(){
     cin >> s;
     cout << s;
 
-
     return 0;
 }
