@@ -27,7 +27,7 @@ int main(){
     freopen("output.txt","w",stdout);
 #endif
 
-    ordered_set S;    
+    ordered_set S;
     vector<int>nums{1,3,2,2,4,4,8,6,7,3};
     for(int i=0; i<nums.size(); i++){
         S.insert(nums[i]);
