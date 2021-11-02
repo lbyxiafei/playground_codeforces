@@ -51,7 +51,7 @@ int main(){
     auto it=S.lower_bound(15);
     cout << '!';
     cout << distance(S.begin(),it);
-    cout << '?';
+    cout << '!';
     
 
     return 0;
