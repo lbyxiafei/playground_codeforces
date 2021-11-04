@@ -26,27 +26,79 @@ typedef long long LL;
 typedef unsigned long long ULL;
 typedef pair<int, int> PII;
 
+#pragma region C++ Intro
+// constructor的语法
+//  Struct/ClassName(params): params(p_val) {...}
+struct Catio {
+  int age;
+  string name;
+  Catio *brother, *sister;
+
+  // 注意：与其他语言不同之处是多了“冒号”，冒号之后的区域叫：initialization_list section
+  Catio() : brother(nullptr), sister(nullptr) {}
+  // initialization_list section可以直接调用前面的constructor
+  Catio(int _a, string _n) : Catio() {
+    age = _a;
+    name = _n;
+  }
+  // 注意：下面这个mixed：mem-init + constructor却不行
+  // Error: a deligata delegating constructor cannot have other mem-initializers
+  // Catio(string _n) : name(_n), Catio() {}
+
+  // 也可以直接赋值
+  Catio(int _a, string _n, Catio *_b, Catio *_s) : age(_a), name(_n), brother(_b), sister(_s) {}
+};
+
+ostream &operator<<(ostream &sm, Catio &cat) {
+  return sm << "Name:" << cat.name << ", age:" << cat.age
+            << ", brother:" << cat.brother << ", sister:" << cat.sister
+            << endl;
+}
+
+// constexpr简单应用
+//  constexpr int A() {return 3;} // Forces the computation to happen
+//                                      at compile time
+//  int arr[A()+2];               // Created an array of size 5
+constexpr int cube(int x) {return x*x*x;}
+
+// constructor的不同的定义方式，尤其是initialization_list的展开
+// constexpr优化运算时间演示
+void IntroUtils() {
+  // constructor #1
+  cout << "IntroUtils" << endl;
+  Catio c;
+  cout << c;
+  // constructor #2
+  Catio c1(3, "BenLei"), c2(3, "BuoLuo", &c1, &c1);
+  cout << c1;
+  cout << c2;
+
+  // constexpr的运用可以优化运行时间！
+  cout << cube(111);
+}
+#pragma endregion
+
 #pragma region STL
 // STL non-member functions实验
 // count(it1,it2,T)：数一数元素T在范围内的个数
 // count_if(it1,it2,lambda)：数一数满足lambda的元素个数
 // for_each(it1,it2,lambda)：对于范围内的元素进行lambda
-void STLNonMemberUtils(){
-  vector<int> arr{1,2,3};
+void STLNonMemberUtils() {
+  vector<int> arr{1, 2, 3};
   // count
-  int cnt=count(arr.begin(),arr.end(),2);
+  int cnt = count(arr.begin(), arr.end(), 2);
   cout << cnt << endl;
   // count_if
-  cnt=count_if(arr.begin(),arr.end(),[](int x){
-    return x&1;
+  cnt = count_if(arr.begin(), arr.end(), [](int x) {
+    return x & 1;
   });
   cout << cnt << endl;
 
   // for_each, 注意x的类型是引用
-  for_each(arr.begin(),arr.end(),[](int &x){
+  for_each(arr.begin(), arr.end(), [](int &x) {
     x++;
   });
-  forn(i,arr.size()) cout << arr[i] << ' ';
+  forn(i, arr.size()) cout << arr[i] << ' ';
   cout << endl;
 }
 
@@ -105,17 +157,17 @@ void StreamUtils() {
 
 // string不同的定义方式
 //  string s(int,char)
-//  string s(vector)  
+//  string s(vector)
 // resize的padding right作用
-void StringUtils(){
+void StringUtils() {
   // 用char定义
-  string s(5,'a');
+  string s(5, 'a');
   cout << s << endl;
   // resize
   s.resize(4);
   cout << s << endl;
   // resize->padding right
-  s.resize(5,'x');
+  s.resize(5, 'x');
   cout << s << endl;
 }
 
@@ -147,77 +199,77 @@ void VectorUtils() {
   cout << endl;
 
   // accumulate 累加
-  int x=accumulate(A.begin(),A.end(),0);
+  int x = accumulate(A.begin(), A.end(), 0);
   cout << x << endl;
   // accumulate 累乘
-  x=accumulate(A.begin(),A.end(),1,multiplies<int>());
+  x = accumulate(A.begin(), A.end(), 1, multiplies<int>());
   cout << x << endl;
 
   // partial_sum: 前缀和
-  vector<int> arr{1,2,3,4}, sarr(arr.size()+1);
-  partial_sum(arr.begin(),arr.end(),sarr.begin()+1);
-  forn(i,sarr.size()) cout << sarr[i] << ' ';
+  vector<int> arr{1, 2, 3, 4}, sarr(arr.size() + 1);
+  partial_sum(arr.begin(), arr.end(), sarr.begin() + 1);
+  forn(i, sarr.size()) cout << sarr[i] << ' ';
   cout << endl;
   // partial_sum: 前缀积
-  partial_sum(arr.begin(),arr.end(),sarr.begin()+1,multiplies<int>());
-  forn(i,sarr.size()) cout << sarr[i] << ' ';
+  partial_sum(arr.begin(), arr.end(), sarr.begin() + 1, multiplies<int>());
+  forn(i, sarr.size()) cout << sarr[i] << ' ';
   cout << endl;
 
   // partition：和quick sort的partition原理一样，但无法得知pivot idx最终位置
-  auto lessThan10=[](int x){
-    return x<10;
+  auto lessThan10 = [](int x) {
+    return x < 10;
   };
-  arr={11,12,13,2,1,3};
-  partition(arr.begin(),arr.end(),lessThan10);
-  forn(i,arr.size()) cout << arr[i] << ' ';
+  arr = {11, 12, 13, 2, 1, 3};
+  partition(arr.begin(), arr.end(), lessThan10);
+  forn(i, arr.size()) cout << arr[i] << ' ';
   cout << endl;
   // stable_partition：partition基础上保持原数组相对顺序
-  arr={11,12,13,2,1,3};
-  stable_partition(arr.begin(),arr.end(),lessThan10);
-  forn(i,arr.size()) cout << arr[i] << ' ';
+  arr = {11, 12, 13, 2, 1, 3};
+  stable_partition(arr.begin(), arr.end(), lessThan10);
+  forn(i, arr.size()) cout << arr[i] << ' ';
   cout << endl;
 
   // merge：把排好序的2个source数组合并为target数组
-  A={1,2,3}, B={4,5,6}, C.resize(A.size()+B.size());
-  merge(A.begin(),A.end(),
-        B.begin(),B.end(),
+  A = {1, 2, 3}, B = {4, 5, 6}, C.resize(A.size() + B.size());
+  merge(A.begin(), A.end(),
+        B.begin(), B.end(),
         C.begin());
   cout << "merge" << ':';
-  forn(i,C.size()) cout << C[i] << ' ';
+  forn(i, C.size()) cout << C[i] << ' ';
   cout << endl;
   // inplace_merge：标准的merge_sort辅助方程的stl写法
-  A={4,5,6,1,2,3};
-  inplace_merge(A.begin(),A.begin()+3,A.end());
+  A = {4, 5, 6, 1, 2, 3};
+  inplace_merge(A.begin(), A.begin() + 3, A.end());
   cout << "inplace_merge" << ':';
-  forn(i,A.size()) cout << A[i] << ' ';
+  forn(i, A.size()) cout << A[i] << ' ';
   cout << endl;
 
   // rotate(it1,it2,it3)：it1,2,3是顺序，把it2轮转到it1的位置
-  arr={1,2,3,4,5};
-  rotate(arr.begin(),arr.begin()+3,arr.end());
-  forn(i,arr.size()) cout << arr[i] << ' ';
+  arr = {1, 2, 3, 4, 5};
+  rotate(arr.begin(), arr.begin() + 3, arr.end());
+  forn(i, arr.size()) cout << arr[i] << ' ';
   cout << endl;
   // roatate_copy(it1,it2,it3,target_it)
-  arr={1,2,3,4,5}, A.resize(arr.size());
-  rotate_copy(arr.begin(),arr.begin()+3,arr.end(),
+  arr = {1, 2, 3, 4, 5}, A.resize(arr.size());
+  rotate_copy(arr.begin(), arr.begin() + 3, arr.end(),
               A.begin());
-  forn(i,arr.size()) cout << arr[i] << ' ';
+  forn(i, arr.size()) cout << arr[i] << ' ';
   cout << endl;
-  forn(i,A.size()) cout << A[i] << ' ';
+  forn(i, A.size()) cout << A[i] << ' ';
   cout << endl;
 
   // all_of, any_of, none_of
-  arr={1,2,3,4,5};
-  bool flag=all_of(arr.begin(),arr.end(),[](int x){
-    return x==5; // 所有arr[i]为5，flag为true
+  arr = {1, 2, 3, 4, 5};
+  bool flag = all_of(arr.begin(), arr.end(), [](int x) {
+    return x == 5;  // 所有arr[i]为5，flag为true
   });
   cout << flag << endl;
-  flag=any_of(arr.begin(),arr.end(),[](int x){
-    return x&1; // 如果有一个arr[i]为奇数，则flag为true
+  flag = any_of(arr.begin(), arr.end(), [](int x) {
+    return x & 1;  // 如果有一个arr[i]为奇数，则flag为true
   });
   cout << flag << endl;
-  flag=none_of(arr.begin(),arr.end(),[](int x){
-    return !~x; // 没有任何arr[i]为-1,则flag为true
+  flag = none_of(arr.begin(), arr.end(), [](int x) {
+    return !~x;  // 没有任何arr[i]为-1,则flag为true
   });
   cout << flag << endl;
 }
@@ -238,7 +290,7 @@ void GameTheory() {
 // Member functions:
 //  order_of_key(x) 返回x的排名
 //  find_by_order(k) 返回第k小的元素的iterator
-void pbds(){
+void pbds() {
   ordered_set S;
   vector<int> nums{1, 3, 2, 2, 4, 4, 8, 6, 7, 3};
   for (int i = 0; i < nums.size(); i++) {
@@ -265,12 +317,14 @@ int main() {
   freopen("output.txt", "w", stdout);
 #endif
 
-  //STLNonMemberUtils();
-  //StringUtils();
-  //VectorUtils();
-  //StreamUtils();
+  IntroUtils();
 
-  pbds();
+  // STLNonMemberUtils();
+  // StringUtils();
+  // VectorUtils();
+  // StreamUtils();
+
+  // pbds();
 
   return 0;
 }
