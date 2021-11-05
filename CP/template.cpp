@@ -61,7 +61,8 @@ ostream &operator<<(ostream &sm, Catio &cat) {
 //  int arr[A()+2];               // Created an array of size 5
 constexpr int cube(int x) {return x*x*x;}
 
-// template function
+// functional programming：一种全新的programming model
+// template-lambda模板 function
 // 万物皆可template化
 template<typename func>
 void filter(func f, vector<int> arr){
@@ -74,7 +75,7 @@ void filter(func f, vector<int> arr){
 // constructor的不同的定义方式，尤其是initialization_list的展开
 // constexpr优化运算时间演示
 // string,string literal与char array的一些讨论
-// lambda function的template式应用
+// functional-programming: template-lambda pattern/lambda function的template式应用
 void IntroUtils() {
   // constructor #1
   cout << "IntroUtils" << endl;
