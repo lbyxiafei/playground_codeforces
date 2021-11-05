@@ -61,8 +61,20 @@ ostream &operator<<(ostream &sm, Catio &cat) {
 //  int arr[A()+2];               // Created an array of size 5
 constexpr int cube(int x) {return x*x*x;}
 
+// template function
+// 万物皆可template化
+template<typename func>
+void filter(func f, vector<int> arr){
+  for(auto x:arr)
+    if(f(x))
+      cout << x << ' ';
+  cout << endl;
+}
+
 // constructor的不同的定义方式，尤其是initialization_list的展开
 // constexpr优化运算时间演示
+// string,string literal与char array的一些讨论
+// lambda function的template式应用
 void IntroUtils() {
   // constructor #1
   cout << "IntroUtils" << endl;
@@ -74,7 +86,68 @@ void IntroUtils() {
   cout << c2;
 
   // constexpr的运用可以优化运行时间！
-  cout << cube(111);
+  cout << cube(111) << endl;
+
+  // 关于string literal，char array，char*的一些讨论
+  // string作为mutable的存在，比较简单粗暴
+  // string literal的定义方式:
+  //  const char *a="abc"; 
+  //  char *a="abc" // 这里特别注意：compile会过，但会有warning，并且会被强制转换成上面一行
+  //                // 看似定义了char array，实际是string literal
+  // char array的定义方式：
+  //  char chs[]="abcdef";
+  // 关于char指针:
+  //  char *ch可以指向char array，也可以指向string literal
+  //  如上所示，如果从定义出发，只能指代string literal
+  //  要想指代char array，只有间接可能：
+  //    char *ch;
+  //    char chs[]="char array";
+  //    ch=chs;
+
+  // string，简单粗暴
+  // 附带string到char array的朴素转换方式
+  string s="string";
+  swap(s[0],s[1]); 
+  assert(s[0]=='t');
+  char chs3[s.size()];
+  forn(i,s.size()) chs3[i]=s[i]; // Now: "tsring"
+  swap(*chs3,*(chs3+1));
+  assert(*chs3=='s');
+  // char array朴素定义
+  char chs[7]={'s','t','r','i','n','g','\0'};
+  char *b=chs;
+  swap(*(b),*(b+1));
+  assert(*b=='t');
+  // char array更具一般化的定义
+  // 附带和char指针的互动
+  char chs2[8]="abcdefg";
+  char *a=chs2;
+  swap(*a, *(a+6));
+  assert(*a=='g');
+  swap(*chs2,*(chs2+6));
+  assert(*chs2=='a');
+  // wchar_t array的一般优化定义，以及与char指针的互动
+  wchar_t chs4[]=L"abc";
+  assert(*chs4==97); // 'a'->97
+  swap(*(chs4),*(chs4+1));
+  assert(*chs4==98);
+  // wchar_t版本的string literal #1
+  const wchar_t chs5[]=L"abc";
+  //swap(*(chs5),*(chs5+1)); // error
+  assert(*chs5==97);
+  // wchar_t版本的string literal #2
+  const wchar_t *cx=L"zabcde";
+  //swap(*(cx),*(cx+1)); //error
+  assert(*cx==122);
+
+  // lambda与template的结合
+  auto calc=[](int x){
+    return x<10;
+  };
+  vector<int> arr{1,20,3,40,5,60};
+  filter(calc,arr);
+
+  assert(1==2);
 }
 #pragma endregion
 
@@ -135,7 +208,7 @@ istream &operator>>(istream &sm, Cat &c) {
   return sm;
 }
 
-void StreamUtils() {
+void STLStreamUtils() {
   stringstream ss;
   int x = 15;
   // stringstream 当做缓存用以暂存数据不同形式
@@ -159,7 +232,7 @@ void StreamUtils() {
 //  string s(int,char)
 //  string s(vector)
 // resize的padding right作用
-void StringUtils() {
+void STLStringUtils() {
   // 用char定义
   string s(5, 'a');
   cout << s << endl;
@@ -178,7 +251,7 @@ void StringUtils() {
 // merge(it1,it2,iit3,iit4,target)/inplace_merge(start,mid,end)：参考merge sort的辅助merge
 // rotate/rotate_copy(it1,it2,it3,target)：以round robin的方式轮转/旋转数组
 // all_of/none_of/any_of(it1,it2,lambda)：非常实用的f(it1,it2,lambda)的判定数组状态的语法
-void VectorUtils() {
+void STLVectorUtils() {
   vector<int> A{1, 2, 3, 4}, B(A.size()), C(A.size());
   // transform #1: 对原数组(A)进行变形，写入目标数组
   transform(A.begin(), A.end(),
@@ -317,14 +390,18 @@ int main() {
   freopen("output.txt", "w", stdout);
 #endif
 
-  IntroUtils();
+  if(true){
+    IntroUtils();
+  }
+  else{
+    STLNonMemberUtils();
+    STLStringUtils();
+    STLVectorUtils();
+    STLStreamUtils();
 
-  // STLNonMemberUtils();
-  // StringUtils();
-  // VectorUtils();
-  // StreamUtils();
+    pbds();
+  }
 
-  // pbds();
 
   return 0;
 }
