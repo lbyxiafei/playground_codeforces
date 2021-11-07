@@ -1,15 +1,14 @@
 
 ## 数学符号、公式
-
+```
 同时适用于 Markdown 和 Latex. 
 Markdown 在 Winddows 下使用 `KaTeX` 解析器有部分符号无法渲染，需使用 `MathJax` 解析器。二者依赖的底层协议都是 `Tex`，二者优缺点：
 
 + MathJax 有着更全面的解析，但却丧失了体积轻量这一优势。
 + KaTeX 则更加灵活，以高速渲染为优势。
+```
 
-****
-#### 转载自：[tianyalang](https://github.com/tianyalang/Latex_tips)
-======================
+> 转载自：[tianyalang](https://github.com/tianyalang/Latex_tips)
 
 [toc]
 
