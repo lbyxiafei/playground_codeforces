@@ -3,7 +3,7 @@
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 
-#define forn(i, n) for (int i = 0; i < n; i++)
+#define forn(i, n) for (int i = 0; i < int(n); i++)
 
 using namespace std;
 using namespace __gnu_pbds;

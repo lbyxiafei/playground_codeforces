@@ -3,6 +3,8 @@
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 
+#define forn(i, n) for (int i = 0; i < int(n); i++)
+
 using namespace std;
 using namespace __gnu_pbds;
 
@@ -30,16 +32,11 @@ int main() {
   freopen("output.txt", "w", stdout);
 #endif
 
-  ordered_set S;
-  vector<int> nums{1, 3, 2, 2, 4, 4, 8, 6, 7, 3};
-  for (int i = 0; i < nums.size(); i++) {
-    S.insert(nums[i]);
-    cout << nums[i] << ':' << S.order_of_key(nums[i]) << endl;
+  int T;
+  cin >> T;
+  forn(_,T){
+    cout << '?';
   }
-  for (auto x : S)
-    cout << x << ' ';
-  cout << endl
-       << *S.find_by_order(0) << ',' << *S.lower_bound(5) << endl;
 
   return 0;
 }
