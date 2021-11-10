@@ -4,3 +4,5 @@ $date=&get-date
 
 echo $branch
 echo $date
+
+Write-Host "Test...Done"
