@@ -1,7 +1,15 @@
-$title = $args[0]
+# git commit with arg[0] as title
+# if there is no given title, use default: checkpoint + datetime
 
-Write-Host "Commiting..."
-git add .
-git commit -m $title
-git status
-Write-Host "Commiting...Done!"
+$title = $args[0]
+$date = Get-Date -Format s
+
+if (!$title -or $title -eq ".") {
+    $title = "Check point, " + $date + "."
+}
+
+&Write-Host "Commiting..."
+&git add .
+&git commit -m $title
+&Write-Host "Commiting...Done!"
+&Write-Host `n
