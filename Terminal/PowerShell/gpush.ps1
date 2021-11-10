@@ -11,8 +11,9 @@ Write-Host "Title:" $title
 Write-Host "Branch:" $branch
 Write-Host `n
 
-gcommit $title
+&gcommit $title
+Write-Host `n
 
 Write-Host "Pushing..."
-git push $branch
+&git push $branch
 Write-Host "Pushing...Done!"
