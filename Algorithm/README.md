@@ -56,3 +56,38 @@
         };
         return calc(right)-calc(left-1);
         ```
+### DP
+#### 背包
+- 背包要诀：
+  - 循环永远是：物品→体积→决策
+  - `1维`状态数组下，只有`完全`背包的第二层循环是`从左往右`
+    - 而二维情况下，体积层的循环一致遵循从左往右即可
+- 背包属于是`组合类DP`。之前努力试图强记套路，然而从最原始的二维定义出发，这其实是一种相较于线性DP更高级复杂的DP
+##### 完全背包
+- 二维DP
+  ```cpp
+  int n,V;
+  cin >> n >> V;
+  vector<vector<int>> f(n+1, vector<int>(V+1));
+  for(int i=1; i<=n; i++){
+      int v,w;
+      cin >> v >> w;
+      // 这里需要从0开始循环，因为再后面一行需要取值
+      for(int j=0; j<=V; j++){
+          f[i][j]=f[i-1][j];
+          if(j>=v) f[i][j]=max(f[i][j],f[i][j-v]+w);
+      }
+  }
+  cout << f[n][V] << endl;
+  ```
+- 一维DP
+  ```cpp
+  cin >> n >> m;
+  for(int i=1; i<=n; i++)
+      scanf("%d%d",&v[i],&w[i]);
+  for(int i=1; i<=n; i++){
+      for(int j=v[i]; j<=m; j++) // 这里不再需要从0开始循环
+          f[j]=max(f[j],f[j-v[i]]+w[i]);
+  }
+  cout << f[m];
+  ```
