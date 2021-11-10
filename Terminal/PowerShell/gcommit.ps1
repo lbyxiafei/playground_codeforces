@@ -1,6 +1,7 @@
 $title = $args[0]
-get-date
+
+Write-Host "Commiting..."
 git add .
-git commit $title
-git push
+git commit -m $title
 git status
+Write-Host "Commiting...Done!"
