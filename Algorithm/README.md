@@ -1,5 +1,26 @@
 [toc]
 ## Algorithm
+### 排序
+#### 快速选择
+- 给定无序数组，求从小到大的第k个数，例题：[AC.第k个数](https://www.acwing.com/activity/content/problem/content/820/)
+  - 基本思路：套用快速排序的模板，在此基础上，根据k和r-start的比较进行下一层递归
+  - 华点：这里与k进行比较的不是r，因为k是与start的相对距离，而r是与0的相对距离，需要对r进行一次处理确保一致性
+    ```cpp
+    int quick_select(vector<int>& arr, int start, int end, int k){
+        if(start==end) return arr[start];
+        int l=start-1, r=end+1, mid=start+end>>1, x=arr[mid];
+        while(l<r){
+            do l++;
+            while(arr[l]<x);
+            do r--;
+            while(arr[r]>x);
+            if(l<r) swap(arr[l],arr[r]);
+        }
+        int t=r-start;
+        if(t>=k) return quick_select(arr, start, r, k);
+        else return quick_select(arr,r+1,end,k-t-1); // 注意这里需要额外k--，因为k是0-indexed
+    }
+    ```
 ### Array
 #### Subarray
 - 求一个数组中的subarray的个数，使得subarray某个属性满足一个范围
