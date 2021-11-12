@@ -1,11 +1,11 @@
 [toc]
-### C++ 
+## C++ 
 - [Advanced C++, Qian Bo](https://www.youtube.com/playlist?list=PLE28375D4AC946CC3)
   - 课程的前半部分是在追赶式的学习理解C++的底层，或者说最重要的实质：指针、引用，以及一些重要的使C++不同于其他语言的极其powerful的概念：const、virtual
   - 混杂了语法学习和头脑风暴的前半阶段
   - 过渡到后半程，好像有了连接的感觉：底层的强大的概念组合在一起产生了各种不同的东西，这就是c++的魅力吧：`clean`以及`re-use`
 
-#### stack, heap
+### stack, heap
 - stack
   - Stored in computer RAM just like the heap.
   - Variables created on the stack will go `out of scope` and are `automatically deallocated`.
@@ -29,7 +29,7 @@
 - static
   - Global variable
   - Only one copy for the entire program, no matter how many threads exist
-#### 引用、指针
+### 引用、指针
 - reference
   - 为什么会有引用？
     - c++作为c语言的进阶版，必然会保留指针，但是为什么会有引用呢？
@@ -55,61 +55,66 @@
 - pointer
   - 可以为空，也可以自由绑定、解绑
     - 因而可能出现：野指针。即，p1，p2都指向同一object，如果p1被free了，p2就成了野指针
-```cpp
-int t=3;
-
-// 拷贝：创建了一个新的内存空间，并把原值(t的值)copy到新的地址
-int x=t;
-assert(&x!=&t);
-
-// 无创建，无拷贝
-int &x=t;
-assert(&x==&t);
-
-// 创建新内存空间，内存空间存了另一个内存地址，所存的地址为原数据地址(t的地址)
-int *x=&t;
-assert(x==&t);
-```
-#### const
-- A **compile time** constraint that an object anc not be modified.
   ```cpp
-  const int i=9;
-  const_cast<int&>(i)=6;
-
-  int j;
-  static_cast<const int&>(j)=7;
-
-
-  const int *p1=&i; // data is const, pointer is not
-  *p1=5; // error: assignment of read-only location * p1
-  p1++; // this is okay
-
-  int* const p2; // p2 is const, data it points to is not
-
-  const int* const p3; // data and pointer are both const
-
-  // Rule of thumb: if const is on the left of *, data is const;
-  // If const is on the right of the *, pointer is const.
-  int const *p4=&i; // warning，等同下行
-  const int *p4=&i;
-
+  int t=3;
+  // 拷贝：创建了一个新的内存空间，并把原值(t的值)copy到新的地址
+  int x=t;
+  assert(&x!=&t);
+  // 无创建，无拷贝
+  int &x=t;
+  assert(&x==&t);
+  // 创建新内存空间，内存空间存了另一个内存地址，所存的地址为原数据地址(t的地址)
+  int *x=&t;
+  assert(x==&t);
   ```
-- const and Functions
-  ```cpp
-  void setAge(const int& a){age=a;} // Efficient: no need to copy the data, just pass the reference and protect the caller's data(by const)
-  const string& getName() {return name;} // increase efficiency(ref is smaller in size than the copy of string) and protect callee's data(by const)
-  void printDogName() const {cout << name << endl;} // 1. do not make any changes to member variables; 2. can only call another const functions inside the body.
-  ```
+### const
+- 定义：A **compile time** constraint that an object can not be modified.
+  - 然而也可以有例外，尽管看上去更像是quirk：
+    ```cpp
+    const int i=9;
+    const_cast<int&>(i)=6; // 尽管可能会compile过，但是i的std::out依然是9
+    ```
+- const & pointer
+  - 难点，根据const的不同位置，所定义的const对象也不同
+    - Rule of thumb: 如果const出现在*的左侧，那么数据是const(If const is on the left of *, data is const; if const is on the right of the *, pointer is const.)
+    ``` cpp
+    const int *p1=&i; // data is const, pointer is not
+    *p1=5; // error: assignment of read-only location * p1
+    p1++; // this is okay
+
+    int* const p2; // p2 is const, data it points to is not
+
+    const int* const p3; // data and pointer are both const
+
+    int const *p4=&i; // warning，等同下行
+    const int *p4=&i;
+    ```
+- const & function
+  - 难点，与上面类似，根据const在function中不同的位置，达到的效果不同
+    - const param: 保护caller的data不被function改动
+      ```cpp
+      void setAge(const int& a){age=a;} 
+      ```
+    - const return: 保护callee的data不被后续caller的logic改动
+      ```cpp
+      const string& getName() {return name;} 
+      ```
+    - const function: 
+      - 大前提：必须是class的scope之内的function
+      - 作用：保护class的所有member不被改动（mutable除外）；同时在这个function内不能调用非const function
+      ```cpp
+      class B{
+        vector<int> arr;
+        mutable int cnt;
+        int getItem(int index) const {
+          cnt++; // 因为cnt是mutable，所以可以被改动
+          return arr[index];
+        }
+      };
+      ```
 - logic constness and bitwise constness
-  ```cpp
-  vector<int> arr;
-  mutable int accessCounter; // 有用的syntax
-  int getItem(int index) const {
-    accessCounter++;
-    return arr[index];
-  }
-  ```
-#### Compiler generated functions
+  - TODO
+### compiler generated functions
 - Copy constructor(`Dog d2(d1)`).
   ```cpp
   Dog(Dog& d){}
@@ -123,5 +128,5 @@ assert(x==&t);
   ```cpp
   ~Dog(){}
   ```
-#### TBD
-#### TBD
+### TBD
+### TBD
