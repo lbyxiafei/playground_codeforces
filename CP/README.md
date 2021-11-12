@@ -128,5 +128,35 @@
   ```cpp
   ~Dog(){}
   ```
-### TBD
-### TBD
+### casting - explicit type converstion
+- Type conversion分两种：1. implicit type conversion, 2. explicit type conversion
+- 这里的casting就是explicit type conversion
+- reinterpret_cast针对地址进行cast，最为危险；剩下的static_cast相对比较危险
+- C++ Style casting
+  - static_cast
+    ```cpp
+    int i=9;
+    float f=static_cast<float>(i);
+    ```
+  - dynamic_cast
+    - pointer and reference only
+    - downcast only(base=>derived)
+  - const_cast
+    - pointer and reference only
+  - reinterpret_cast
+    - pointer and reference only
+- C Stype casting
+  - 下面两种效果一样
+    ```cpp
+    short a=2000;
+    int i=(int)a; // C like cast notion
+    int j=int(a); // functional notion
+    ```
+### 多态
+#### inheritance
+#### virtual
+#### composition(HAS-A) over inheritance(IS-A)
+### rvalue & lvalue
+### namespace & using
+### operator
+#### operator new/delete
