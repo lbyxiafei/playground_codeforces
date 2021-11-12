@@ -1,35 +1,12 @@
 [toc]
-## C++ 
+# C++ 
 - [Advanced C++, Qian Bo](https://www.youtube.com/playlist?list=PLE28375D4AC946CC3)
   - 课程的前半部分是在追赶式的学习理解C++的底层，或者说最重要的实质：指针、引用，以及一些重要的使C++不同于其他语言的极其powerful的概念：const、virtual
   - 混杂了语法学习和头脑风暴的前半阶段
   - 过渡到后半程，好像有了连接的感觉：底层的强大的概念组合在一起产生了各种不同的东西，这就是c++的魅力吧：`clean`以及`re-use`
-
-### stack, heap
-- stack
-  - Stored in computer RAM just like the heap.
-  - Variables created on the stack will go `out of scope` and are `automatically deallocated`.
-  - Much faster to allocate in comparison to variables on the heap.
-  - Implemented with an actual stack data structure.
-  - Stores local data, return addresses, used for parameter passing.
-  - Can have a stack overflow when too much of the stack is used (mostly from infinite or too deep recursion, very large allocations).
-  - Data created on the stack can be used without pointers.
-  - You would use the stack if you know exactly how much data you need to allocate before compile time and it is not too big.
-  - Usually has a maximum size already determined when your program starts.
-- heap
-  - Stored in computer RAM just like the stack.
-  - In C++, variables on the heap must be destroyed manually and never fall out of scope. The data is freed with delete, delete[], or free.
-  - Slower to allocate in comparison to variables on the stack.
-  - Used on demand to allocate a block of data for use by the program.
-  - Can have fragmentation when there are a lot of allocations and deallocations.
-  - In C++ or C, data created on the heap will be pointed to by pointers and allocated with `new` or `malloc` respectively.
-  - Can have allocation failures if too big of a buffer is requested to be allocated.
-  - You would use the heap if you don't know exactly how much data you will need at run time or if you need to allocate a lot of data.
-  - Responsible for memory leaks.
-- static
-  - Global variable
-  - Only one copy for the entire program, no matter how many threads exist
-### 引用、指针
+## 主题分类
+### 内存相关
+#### 引用、指针
 - reference
   - 为什么会有引用？
     - c++作为c语言的进阶版，必然会保留指针，但是为什么会有引用呢？
@@ -67,7 +44,7 @@
   int *x=&t;
   assert(x==&t);
   ```
-### const
+#### const
 - 定义：A **compile time** constraint that an object can not be modified.
   - 然而也可以有例外，尽管看上去更像是quirk：
     ```cpp
@@ -114,6 +91,60 @@
       ```
 - logic constness and bitwise constness
   - TODO
+#### stack, heap
+- stack
+  - Stored in computer RAM just like the heap.
+  - Variables created on the stack will go `out of scope` and are `automatically deallocated`.
+  - Much faster to allocate in comparison to variables on the heap.
+  - Implemented with an actual stack data structure.
+  - Stores local data, return addresses, used for parameter passing.
+  - Can have a stack overflow when too much of the stack is used (mostly from infinite or too deep recursion, very large allocations).
+  - Data created on the stack can be used without pointers.
+  - You would use the stack if you know exactly how much data you need to allocate before compile time and it is not too big.
+  - Usually has a maximum size already determined when your program starts.
+- heap
+  - Stored in computer RAM just like the stack.
+  - In C++, variables on the heap must be destroyed manually and never fall out of scope. The data is freed with delete, delete[], or free.
+  - Slower to allocate in comparison to variables on the stack.
+  - Used on demand to allocate a block of data for use by the program.
+  - Can have fragmentation when there are a lot of allocations and deallocations.
+  - In C++ or C, data created on the heap will be pointed to by pointers and allocated with `new` or `malloc` respectively.
+  - Can have allocation failures if too big of a buffer is requested to be allocated.
+  - You would use the heap if you don't know exactly how much data you will need at run time or if you need to allocate a lot of data.
+  - Responsible for memory leaks.
+- static
+  - Global variable
+  - Only one copy for the entire program, no matter how many threads exist
+### 多态
+#### inheritance
+- 首先，任何情况下Base class的private member均无法被Derived class继承
+- 大体而言，共有三种关键字规范继承的种类：public, protected, private
+  - public
+    - `Base的public到了Derived还是public，Base的protected到了Derived还是protected`
+      ```cpp
+      class B:public D{};
+      ```
+  - protected
+    - `Base的public到了Derived是protected，Base的protected到了Derived还是protected`
+    - 
+      ```cpp
+      class B:protected D{};
+      ```
+  - private
+    - `Base的public到了Derived是private，Base的protected到了Derived是private`
+      ```cpp
+      class B:private D{};
+      ```
+- 继承的二元性(`Duality` of inheritance)
+  - Interface
+  - Implementation
+#### virtual
+#### composition(HAS-A) over inheritance(IS-A)
+### operator
+#### operator new/delete
+## 三岁知识点
+### rvalue & lvalue
+### namespace & using
 ### compiler generated functions
 - Copy constructor(`Dog d2(d1)`).
   ```cpp
@@ -152,11 +183,3 @@
     int i=(int)a; // C like cast notion
     int j=int(a); // functional notion
     ```
-### 多态
-#### inheritance
-#### virtual
-#### composition(HAS-A) over inheritance(IS-A)
-### rvalue & lvalue
-### namespace & using
-### operator
-#### operator new/delete
