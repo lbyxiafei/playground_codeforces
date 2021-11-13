@@ -22,6 +22,24 @@
     }
     ```
 ### Array
+#### 算两次原理
+- 经典算法，很多数组类问题都可以套用：
+  - 问题的一般表现形式：计数，求数组内的subarray个数，使得subarry满足某些条件
+  - 这些条件一般有多个，但是最重要的是，可以通过转换，将条件之间进行decouple
+  - 即，条件的`独立性`，是这个算法的关键钥匙
+  - 从另一个角度，算一个和某个位置对总和的贡献
+- 例题：[LC.Vowels of all substrings](https://leetcode.com/problems/vowels-of-all-substrings/), [LC.子序列宽度之和](https://leetcode.com/problems/sum-of-subsequence-widths/)
+  ```cpp
+  int mod=1e9+7, res=0, n=nums.size();
+  vector<int> p(n);
+  p[0]=1;
+  for(int i=1; i<n; i++) p[i]=(long long)p[i-1]*2%mod;
+  sort(nums.begin(),nums.end());
+  for(int i=0; i<n; i++)
+      // 这里左边和右边是分别单独计算的
+      res=((long long)res+(long long)p[i]*nums[i]-(long long)p[n-i-1]*nums[i])%mod;
+  return res;
+  ```
 #### Subarray
 - 求一个数组中的subarray的个数，使得subarray某个属性满足一个范围
   - 例题：[LC.区间子数组个数](https://leetcode.com/problems/number-of-subarrays-with-bounded-maximum/)
