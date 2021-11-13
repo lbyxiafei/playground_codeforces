@@ -1,7 +1,7 @@
 [toc]
-## Algorithm
-### 排序
-#### 快速选择
+# Algorithm
+## 排序
+### 快速选择
 - 给定无序数组，求从小到大的第k个数，例题：[AC.第k个数](https://www.acwing.com/activity/content/problem/content/820/)
   - 基本思路：套用快速排序的模板，在此基础上，根据k和r-start的比较进行下一层递归
   - 华点：这里与k进行比较的不是r，因为k是与start的相对距离，而r是与0的相对距离，需要对r进行一次处理确保一致性
@@ -21,8 +21,8 @@
         else return quick_select(arr,r+1,end,k-t-1); // 注意这里需要额外k--，因为k是0-indexed
     }
     ```
-### Array
-#### 算两次原理
+## Array
+### 算两次原理
 - 经典算法，很多数组类问题都可以套用：
   - 问题的一般表现形式：计数，求数组内的subarray个数，使得subarry满足某些条件
   - 这些条件一般有多个，但是最重要的是，可以通过转换，将条件之间进行decouple
@@ -40,7 +40,7 @@
       res=((long long)res+(long long)p[i]*nums[i]-(long long)p[n-i-1]*nums[i])%mod;
   return res;
   ```
-#### Subarray
+### Subarray
 - 求一个数组中的subarray的个数，使得subarray某个属性满足一个范围
   - 例题：[LC.区间子数组个数](https://leetcode.com/problems/number-of-subarrays-with-bounded-maximum/)
   - 基本思路：降维，更具体的：把求范围转化成count(r)-count(l-1)即可
@@ -95,14 +95,52 @@
         };
         return calc(right)-calc(left-1);
         ```
-### DP
-#### 背包
+## DFS
+### 折半DFS
+- 如果数据范围在3、40的样子，基本已经是明示了
+- 算法的思路和实现也比较直接
+- 可能存在的华点是如何实现`两半边的互动`来找到答案
+- 举例：[LC.Split array with same average](https://leetcode.com/problems/split-array-with-same-average/)
+  - 算是遇到的折半DFS的难题：包括`平均值的传递公式`，以及全集边界情况的互动处理
+  - 平均值传递公式：$\frac{\sum_1^k{a_i}}{k}=\frac{\sum_{k+1}^n{a_i}}{n-k}=\frac{\sum_1^n{a_i}}{n }$
+    ```cpp
+    bool splitArraySameAverage(vector<int>& nums) {
+        if(nums.size()==1) return false;
+        int tot=accumulate(nums.begin(),nums.end(),0), n=nums.size(), m=n/2;
+        for(int i=0; i<n; i++) nums[i]=nums[i]*n-tot;
+        multiset<int> S;
+        auto dfs=[&](auto&& self, int u, int cur){
+            if(cur) S.insert(cur);
+            if(u==m) return false;
+            if(self(self,u+1,cur)) return true;
+            if(cur+nums[u]==0) return true;
+            if(self(self,u+1,cur+nums[u])) return true;
+            return false;
+        };
+        
+        if(dfs(dfs,0,0)) return true;
+        int t=accumulate(nums.begin(),nums.begin()+m,0);
+        S.erase(S.find(t));
+        
+        auto dfs2=[&](auto&& self, int u, int cur){
+            if(S.count(-cur)) return true;
+            if(u==n) return false;
+            if(self(self,u+1,cur)) return true;
+            if(cur+nums[u]==0) return true;
+            if(self(self,u+1,cur+nums[u])) return true;
+            return false;
+        };
+        return dfs2(dfs2,m,0);
+    }
+    ```
+## DP
+### 背包
 - 背包要诀：
   - 循环永远是：物品→体积→决策
   - `1维`状态数组下，只有`完全`背包的第二层循环是`从左往右`
     - 而二维情况下，体积层的循环一致遵循从左往右即可
 - 背包属于是`组合类DP`。之前努力试图强记套路，然而从最原始的二维定义出发，这其实是一种相较于线性DP更高级复杂的DP
-##### 完全背包
+#### 完全背包
 - 二维DP
   ```cpp
   int n,V;
