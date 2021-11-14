@@ -212,6 +212,7 @@
   }
   ```
 #### operator new/delete
+- 重载new/delete operator(new_handler)的一个重要的用途：帮助`debug memory leak`
 ## 三岁知识点
 ### Resource Acquisition Is Initialization
 - RAII（Resource Acquisition Is Initialization）是由c++之父Bjarne Stroustrup提出的，中文翻译为资源获取即初始化，他说：使用局部对象来管理资源的技术称为资源获取即初始化；这里的资源主要是指操作系统中有限的东西如内存、网络套接字等等，局部对象是指存储在栈的对象，它的生命周期是由操作系统来管理的，**无需人工介入**
@@ -259,6 +260,19 @@
       d.output(3);
     }
     ```
+- anonymous namespace: 可以被同一文件内的其他member call
+  ```cpp
+  void f(int x){cout << '?' << endl;}
+  namespace {
+    void f(){cout << '!' << endl;} // 必须保证两个f()的param形式不同
+    void g(){f();}
+  }
+  int main() {
+    f();
+    g();
+  }
+  ```
+  
 ### compiler generated functions
 - Copy constructor(`Dog d2(d1)`).
   ```cpp
@@ -297,3 +311,19 @@
     int i=(int)a; // C like cast notion
     int j=int(a); // functional notion
     ```
+### Koening lookup/ADL
+- Argument Dependent Lookup
+- Definition of class: `A class describes a set of data, along with the functions that operate on that data.`
+  - 根据class的定义，以下的h()和operator<<()重载方程都属于class C，即使从scope的角度看实在class的外面
+  ```cpp
+  namespace A{
+    class C{
+      public:
+      void f()=0;
+      void g()=0;
+    };
+    void h(C);
+    ostream& operator<<(ostream& os, const &C);
+  }
+  ```
+  
