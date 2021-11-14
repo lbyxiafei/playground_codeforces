@@ -151,36 +151,40 @@
     D wisper
   */
   class B{
-    private:
-    protected:
-    void wisper(){cout << "B wisper" << endl;}
-    public:
-    void bark(){ cout << "B bark" << endl; }
-    virtual void speak(){ cout << "B speak" << endl; }
-};
+      private:
+      protected:
+      void wisper(){cout << "B wisper" << endl;}
+      public:
+      void bark(){ cout << "B bark" << endl; }
+      virtual void speak(){ cout << "B speak" << endl; }
+  };
 
-class D: public B{
-    private:
-    protected:
-    void wisper(){cout << "D wisper" << endl;}
-    public:
-    void bark(){cout << "D bark!" << endl;}
-    virtual void speak() { 
-        cout << "D speak!" << endl;
-        wisper();
-    }
-};
+  class D: public B{
+      private:
+      protected:
+      void wisper(){cout << "D wisper" << endl;}
+      public:
+      void bark(){cout << "D bark!" << endl;}
+      virtual void speak() { // 理论上这里derived class funcetion的virtual关键字可以去掉，效果不变，但没必要 
+          cout << "D speak!" << endl;
+          wisper();
+      }
+  };
 
-int main() {
-    std::cout << "Hello World!\n";
-    B *bd=new D;
-    bd->bark();
-    bd->speak(); // 如过D中没有wisper，那么会打印：B wisper
-    
-    //bd->wisper(); //error: wisper is a protected member of 'B'
-}
+  int main() {
+      std::cout << "Hello World!\n";
+      B *bd=new D;
+      bd->bark();
+      bd->speak(); // 如过D中没有wisper，那么会打印：B wisper
+      //bd->wisper(); //error: wisper is a protected member of 'B'
+  }
   ```
 #### virtual
+- 纯虚函数：`virtual void func=0;`
+  - 其他语言中`抽象`函数的代替
+  - 任何有纯虚函数的类成为抽象类，不能声称对象
+- 一个基指针指向子对象，如果调用的函数是virtual，那么运行的就是子类的函数，否则，运行的依旧是基类
+  - [Code参考](####inheritance)
 #### composition(HAS-A) over inheritance(IS-A)
 ### operator
 #### type conversion
