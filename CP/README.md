@@ -1,337 +1,170 @@
 [toc]
-# C++ 
-- [Advanced C++, Qian Bo](https://www.youtube.com/playlist?list=PLE28375D4AC946CC3)
-  - 课程的前半部分是在追赶式的学习理解C++的底层，或者说最重要的实质：指针、引用，以及一些重要的使C++不同于其他语言的极其powerful的概念：const、virtual
-  - 混杂了语法学习和头脑风暴的前半阶段
-  - 过渡到后半程，好像有了连接的感觉：底层的强大的概念组合在一起产生了各种不同的东西，这就是c++的魅力吧：`clean`以及`re-use`
-- [Modern C++, Qian Bo](https://www.youtube.com/playlist?list=PL5jc9xFGsL8FWtnZBeTqZBbniyw0uHyaH)
-  - TODO
-## 主题分类
-- 按大专题类型进行展开
-### 内存相关
-#### 引用、指针
-- reference
-  - 为什么会有引用？
-    - c++作为c语言的进阶版，必然会保留指针，但是为什么会有引用呢？
-    - 很直观的原因是：语法糖
-    - 作者给出的原因是：为了实现`operator overloading`
-  - 引用是什么
-    - 可以说，本质是个`const指针`，又叫指针常量，然而跟指针的用法截然不同
-    - 也可以说，是object的别名，一块儿制定内存的别名，永远指向该内存区域
-    - 同时，其本身的地址和size是`隐形`的，即，addr和sizeof返回的都是指向内容的addr和size
-  - 引用的特点
-    - 不能为空，创建时必须绑定有效内存区域
-    - 无法重新绑定
+# Algorithm
+## 排序
+### 快速选择
+- 给定无序数组，求从小到大的第k个数，例题：[AC.第k个数](https://www.acwing.com/activity/content/problem/content/820/)
+  - 基本思路：套用快速排序的模板，在此基础上，根据k和r-start的比较进行下一层递归
+  - 华点：这里与k进行比较的不是r，因为k是与start的相对距离，而r是与0的相对距离，需要对r进行一次处理确保一致性
     ```cpp
-    int x=1, y=2;
-    int &ref=x;
-    ref=y;  // x=y,即x被赋值2
-    ref=&y; // error:incompatible pointer to integer conversion assigning to 'int' from 'int *'
-    ```
-  - 引用的优势（相比指针）
-    - 使用起来非常安全，绝无NPE的可能
-    - 写法更为简洁（如果是指针，调用时需要取地址&，展开时需要取值*）
-  - 结论：多用引用
-- pointer
-  - 可以为空，也可以自由绑定、解绑
-    - 因而可能出现：野指针。即，p1，p2都指向同一object，如果p1被free了，p2就成了野指针
-  ```cpp
-  int t=3;
-  // 拷贝：创建了一个新的内存空间，并把原值(t的值)copy到新的地址
-  int x=t;
-  assert(&x!=&t);
-  // 无创建，无拷贝
-  int &x=t;
-  assert(&x==&t);
-  // 创建新内存空间，内存空间存了另一个内存地址，所存的地址为原数据地址(t的地址)
-  int *x=&t;
-  assert(x==&t);
-  ```
-#### const
-- 定义：A **compile time** constraint that an object can not be modified.
-  - 然而也可以有例外，尽管看上去更像是quirk：
-    ```cpp
-    const int i=9;
-    const_cast<int&>(i)=6; // 尽管可能会compile过，但是i的std::out依然是9
-    ```
-- const & pointer
-  - 难点，根据const的不同位置，所定义的const对象也不同
-    - Rule of thumb: 如果const出现在*的左侧，那么数据是const(If const is on the left of *, data is const; if const is on the right of the *, pointer is const.)
-    ``` cpp
-    const int *p1=&i; // data is const, pointer is not
-    *p1=5; // error: assignment of read-only location * p1
-    p1++; // this is okay
-
-    int* const p2; // p2 is const, data it points to is not
-
-    const int* const p3; // data and pointer are both const
-
-    int const *p4=&i; // warning，等同下行
-    const int *p4=&i;
-    ```
-- const & function
-  - 难点，与上面类似，根据const在function中不同的位置，达到的效果不同
-    - const param: 保护caller的data不被function改动
-      ```cpp
-      void setAge(const int& a){age=a;} 
-      ```
-    - const return: 保护callee的data不被后续caller的logic改动
-      ```cpp
-      const string& getName() {return name;} 
-      ```
-    - const function: 
-      - 大前提：必须是class的scope之内的function
-      - 作用：保护class的所有member不被改动（mutable除外）；同时在这个function内不能调用非const function
-      ```cpp
-      class B{
-        vector<int> arr;
-        mutable int cnt;
-        int getItem(int index) const {
-          cnt++; // 因为cnt是mutable，所以可以被改动
-          return arr[index];
+    int quick_select(vector<int>& arr, int start, int end, int k){
+        if(start==end) return arr[start];
+        int l=start-1, r=end+1, mid=start+end>>1, x=arr[mid];
+        while(l<r){
+            do l++;
+            while(arr[l]<x);
+            do r--;
+            while(arr[r]>x);
+            if(l<r) swap(arr[l],arr[r]);
         }
-      };
-      ```
-- logic constness and bitwise constness
-  - TODO
-#### stack, heap
-- stack
-  - Stored in computer RAM just like the heap.
-  - Variables created on the stack will go `out of scope` and are `automatically deallocated`.
-  - Much faster to allocate in comparison to variables on the heap.
-  - Implemented with an actual stack data structure.
-  - Stores local data, return addresses, used for parameter passing.
-  - Can have a stack overflow when too much of the stack is used (mostly from infinite or too deep recursion, very large allocations).
-  - Data created on the stack can be used without pointers.
-  - You would use the stack if you know exactly how much data you need to allocate before compile time and it is not too big.
-  - Usually has a maximum size already determined when your program starts.
-- heap
-  - Stored in computer RAM just like the stack.
-  - In C++, variables on the heap must be destroyed manually and never fall out of scope. The data is freed with delete, delete[], or free.
-  - Slower to allocate in comparison to variables on the stack.
-  - Used on demand to allocate a block of data for use by the program.
-  - Can have fragmentation when there are a lot of allocations and deallocations.
-  - In C++ or C, data created on the heap will be pointed to by pointers and allocated with `new` or `malloc` respectively.
-  - Can have allocation failures if too big of a buffer is requested to be allocated.
-  - You would use the heap if you don't know exactly how much data you will need at run time or if you need to allocate a lot of data.
-  - Responsible for memory leaks.
-- static
-  - Global variable
-  - Only one copy for the entire program, no matter how many threads exist
-### 多态
-#### inheritance
-- 首先，任何情况下Base class的private member均无法被Derived class继承
-- 大体而言，共有三种关键字规范继承的种类：public, protected, private
-  - public
-    - `Base的public到了Derived还是public，Base的protected到了Derived还是protected`
-      ```cpp
-      class B:public D{};
-      ```
-  - protected
-    - `Base的public到了Derived是protected，Base的protected到了Derived还是protected`
-      ```cpp
-      class B:protected D{};
-      ```
-  - private
-    - `Base的public到了Derived是private，Base的protected到了Derived是private`
-      ```cpp
-      class B:private D{};
-      ```
-- 继承的二元性(`Duality` of inheritance)
-  - Interface
-    - pure virtual function
-    - non-virtual public function
-  - Implementation
-    - protected function
-    - non-virtual public function
-> 讨论：'protected' function provides implementation only; in another word, 'protected' protect base function being overriden; in another word, derived class can only use it, not overriding it
-  ```cpp
-  /*
-  output:
-    Hello World!
-    B bark
-    D speak!
-    D wisper
-  */
-  class B{
-      private:
-      protected:
-      void wisper(){cout << "B wisper" << endl;}
-      public:
-      void bark(){ cout << "B bark" << endl; }
-      virtual void speak(){ cout << "B speak" << endl; }
-  };
-
-  class D: public B{
-      private:
-      protected:
-      void wisper(){cout << "D wisper" << endl;}
-      public:
-      void bark(){cout << "D bark!" << endl;}
-      virtual void speak() { // 理论上这里derived class funcetion的virtual关键字可以去掉，效果不变，但没必要 
-          cout << "D speak!" << endl;
-          wisper();
-      }
-  };
-
-  int main() {
-      std::cout << "Hello World!\n";
-      B *bd=new D;
-      bd->bark();
-      bd->speak(); // 如过D中没有wisper，那么会打印：B wisper
-      //bd->wisper(); //error: wisper is a protected member of 'B'
-  }
-  ```
-#### virtual
-- 纯虚函数：`virtual void func=0;`
-  - 其他语言中`抽象`函数的代替
-  - 任何有纯虚函数的类成为抽象类，不能声称对象
-- 一个基指针指向子对象，如果调用的函数是virtual，那么运行的就是子类的函数，否则，运行的依旧是基类
-  - [Code参考](####inheritance)
-#### composition(HAS-A) over inheritance(IS-A)
-- Recommended：不要造Car-Family，去造车的部件的class(abstract)，而后造车的class，来inherite各种部件
-  ```cpp
-  class xCar:public Car{
-    SteeringWheel *p_steerwheel=new SteeringWheel(123);
-    Accelerator *p_ac=new Accelerator(345);
-  };
-  ```
-### operator
-#### type conversion
-- `operator Type(){}`
-  ```cpp
-  class B{
-      public:
-      operator string() const {
-          return "x";
-      }
-  };
-
-  int main() {
-      std::cout << "Hello World!\n";
-      B b;
-      cout << (string)b << endl; // x
-      cout << string(b) << endl; // x
-  }
-  ```
-#### operator new/delete
-- 重载new/delete operator(new_handler)的一个重要的用途：帮助`debug memory leak`
-## 三岁知识点
-- 三岁知识点的收罗、整理
-- 目标：融会贯通后开辟移动至主题专区
-### Resource Acquisition Is Initialization
-- RAII（Resource Acquisition Is Initialization）是由c++之父Bjarne Stroustrup提出的，中文翻译为资源获取即初始化，他说：使用局部对象来管理资源的技术称为资源获取即初始化；这里的资源主要是指操作系统中有限的东西如内存、网络套接字等等，局部对象是指存储在栈的对象，它的生命周期是由操作系统来管理的，**无需人工介入**
-### explicit constructor
-- 在constructor前面加上explicit关键字，可以保证compiler能检测到implicit conversion并throw
-- 参考：[explicit constructor](https://stackoverflow.com/questions/121162/what-does-the-explicit-keyword-mean)
-### rvalue & lvalue
-- lvalue: `An object that occupies some identifiable location in memory.`
-- rvalue: `Any object that is not a lvalue.`
-- lvalue can be implicitly transferred to rvalue.
-  ```cpp
-  int i=1;
-  int x=i; // i is lvalue, used as rvalue here
-  ```
-- rvalue should be explicitly used to create a lvalue
-  ```cpp
-  int v[5];
-  *(v+3)=4; // v+3是一个rvalue，*(v+3)变成了lvalue
-  ```
-### namespace & using
-- using的两种用法：
-  - using directively：`bring all namespace members into current scope`
-    ```cpp
-    using namespace std;
-    ```
-  - using declaratively: `bring a member from base class to current class's scope`
-    - using can also be used to overcome `name hiding`
-    ```cpp
-    class B{
-      public:
-      void func(){cout << '!' << endl;}
-      void output(int x){cout << x << endl;}
-    };
-    class D:private B{
-      public:
-      using B::func; // 这里using使得原本private的func函数（private继承）变成public
-      using B::output; // 如果没有这一行，d.output(3)会出现name hiding的error
-      void test(){func();} // 这里的func是D继承自B的private func
-      void output(){cout << '?' << endl;}
-    };
-    int main() {
-      D d;
-      d.func();
-      d.test();
-      d.output(3);
+        int t=r-start;
+        if(t>=k) return quick_select(arr, start, r, k);
+        else return quick_select(arr,r+1,end,k-t-1); // 注意这里需要额外k--，因为k是0-indexed
     }
     ```
-- anonymous namespace: 可以被同一文件内的其他member call
+## Array
+### 算两次原理
+- 经典算法，很多数组类问题都可以套用：
+  - 问题的一般表现形式：计数，求数组内的subarray个数，使得subarry满足某些条件
+  - 这些条件一般有多个，但是最重要的是，可以通过转换，将条件之间进行decouple
+  - 即，条件的`独立性`，是这个算法的关键钥匙
+  - 从另一个角度，算一个和某个位置对总和的贡献
+- 例题：[LC.Vowels of all substrings](https://leetcode.com/problems/vowels-of-all-substrings/), [LC.子序列宽度之和](https://leetcode.com/problems/sum-of-subsequence-widths/)
   ```cpp
-  void f(int x){cout << '?' << endl;}
-  namespace {
-    void f(){cout << '!' << endl;} // 必须保证两个f()的param形式不同
-    void g(){f();}
-  }
-  int main() {
-    f();
-    g();
-  }
+  int mod=1e9+7, res=0, n=nums.size();
+  vector<int> p(n);
+  p[0]=1;
+  for(int i=1; i<n; i++) p[i]=(long long)p[i-1]*2%mod;
+  sort(nums.begin(),nums.end());
+  for(int i=0; i<n; i++)
+      // 这里左边和右边是分别单独计算的
+      res=((long long)res+(long long)p[i]*nums[i]-(long long)p[n-i-1]*nums[i])%mod;
+  return res;
   ```
-  
-### compiler generated functions
-- Copy constructor(`Dog d2(d1)`).
-  ```cpp
-  Dog(Dog& d){}
-  ```
-- Copy assignment operator(`Dog d2=d1`).
-  ```cpp
-  Dog& operator=(const Dog& d){}
-  ```
-- Default constructor (only if there is no constructor declared).
-- Destructor.
-  ```cpp
-  ~Dog(){}
-  ```
-### casting - explicit type converstion
-- Type conversion分两种：1. implicit type conversion, 2. explicit type conversion
-- 这里的casting就是explicit type conversion
-- reinterpret_cast针对地址进行cast，最为危险；剩下的static_cast相对比较危险
-- C++ Style casting
-  - static_cast
+### Subarray
+- 求一个数组中的subarray的个数，使得subarray某个属性满足一个范围
+  - 例题：[LC.区间子数组个数](https://leetcode.com/problems/number-of-subarrays-with-bounded-maximum/)
+  - 基本思路：降维，更具体的：把求范围转化成count(r)-count(l-1)即可
+  - 关于count subarray的求法，有两种方法：单调栈和双指针
+    - 单调栈
+      - 注意可能出现的重复：[2,2]，小于等于2的subarray[2,2]出现了两次，处理方法：对于两侧的单调栈的单调性判断进行一闭一开的处理
+        ```cpp
+        int n=nums.size();
+        vector<int> stk,L(n),R(n);
+        vector<long long> f(n);
+        for(int i=0; i<n; i++){
+            // 此处为大于等于
+            while(stk.size() && nums[i]>=nums[stk.back()])
+                stk.pop_back();
+            L[i]=stk.empty()?-1:stk.back();
+            stk.push_back(i);
+        }
+        stk.clear();
+        for(int i=n-1; i>=0; i--){
+            // 相应的，由于一闭一开，上面是大于等于，这里显然就要是大于
+            while(stk.size() && nums[i]>nums[stk.back()])
+                stk.pop_back();
+            R[i]=stk.empty()?n:stk.back();
+            stk.push_back(i);
+        }
+        for(int i=0; i<n; i++)
+            f[i]=(long long)(i-L[i])*(R[i]-i);
+        
+        auto calc=[&](int maxx){
+            long long cnt=0;
+            for(int i=0; i<n; i++)
+                if(nums[i]<=maxx)
+                    cnt+=f[i];
+            return cnt;
+        };
+        ```
+    - 双指针
+      - 一个指针负责遍历，另一个指针随遍历指针当前元素的变化而`单调性`变化，当元素符合条件时，进行累加计数
+        ```cpp
+        int n=nums.size();
+        auto calc=[&](int maxx){
+            Lres=0;
+            int l,r;
+            for(l=0,r=0; r<n; r++){
+                if(nums[r]>maxx){
+                    res+=(LL)(r-l+1)*(r-l)/2;
+                    l=r+1;
+                }
+            }
+            // 华点：结尾处需累加最后一次
+            return res+(LL)(r-l+1)*(r-l)/2;
+        };
+        return calc(right)-calc(left-1);
+        ```
+## DFS
+### 折半DFS
+- 如果数据范围在3、40的样子，基本已经是明示了
+- 算法的思路和实现也比较直接
+- 可能存在的华点是如何实现`两半边的互动`来找到答案
+- 举例：[LC.Split array with same average](https://leetcode.com/problems/split-array-with-same-average/)
+  - 算是遇到的折半DFS的难题：包括`平均值的传递公式`，以及全集边界情况的互动处理
+  - 平均值传递公式：$\frac{\sum_1^k{a_i}}{k}=\frac{\sum_{k+1}^n{a_i}}{n-k}=\frac{\sum_1^n{a_i}}{n }$
     ```cpp
-    int i=9;
-    float f=static_cast<float>(i);
+    bool splitArraySameAverage(vector<int>& nums) {
+        if(nums.size()==1) return false;
+        int tot=accumulate(nums.begin(),nums.end(),0), n=nums.size(), m=n/2;
+        for(int i=0; i<n; i++) nums[i]=nums[i]*n-tot;
+        multiset<int> S;
+        auto dfs=[&](auto&& self, int u, int cur){
+            if(cur) S.insert(cur);
+            if(u==m) return false;
+            if(self(self,u+1,cur)) return true;
+            if(cur+nums[u]==0) return true;
+            if(self(self,u+1,cur+nums[u])) return true;
+            return false;
+        };
+        
+        if(dfs(dfs,0,0)) return true;
+        int t=accumulate(nums.begin(),nums.begin()+m,0);
+        S.erase(S.find(t));
+        
+        auto dfs2=[&](auto&& self, int u, int cur){
+            if(S.count(-cur)) return true;
+            if(u==n) return false;
+            if(self(self,u+1,cur)) return true;
+            if(cur+nums[u]==0) return true;
+            if(self(self,u+1,cur+nums[u])) return true;
+            return false;
+        };
+        return dfs2(dfs2,m,0);
+    }
     ```
-  - dynamic_cast
-    - pointer and reference only
-    - downcast only(base=>derived)
-  - const_cast
-    - pointer and reference only
-  - reinterpret_cast
-    - pointer and reference only
-- C Stype casting
-  - 下面两种效果一样
-    ```cpp
-    short a=2000;
-    int i=(int)a; // C like cast notion
-    int j=int(a); // functional notion
-    ```
-### Koening lookup/ADL
-- Argument Dependent Lookup
-- Definition of class: `A class describes a set of data, along with the functions that operate on that data.`
-  - 根据class的定义，以下的h()和operator<<()重载方程都属于class C，即使从scope的角度看实在class的外面
+## DP
+### 背包
+- 背包要诀：
+  - 循环永远是：物品→体积→决策
+  - `1维`状态数组下，只有`完全`背包的第二层循环是`从左往右`
+    - 而二维情况下，体积层的循环一致遵循从左往右即可
+- 背包属于是`组合类DP`。之前努力试图强记套路，然而从最原始的二维定义出发，这其实是一种相较于线性DP更高级复杂的DP
+#### 完全背包
+- 二维DP
   ```cpp
-  namespace A{
-    class C{
-      public:
-      void f()=0;
-      void g()=0;
-    };
-    void h(C);
-    ostream& operator<<(ostream& os, const &C);
+  int n,V;
+  cin >> n >> V;
+  vector<vector<int>> f(n+1, vector<int>(V+1));
+  for(int i=1; i<=n; i++){
+      int v,w;
+      cin >> v >> w;
+      // 这里需要从0开始循环，因为再后面一行需要取值
+      for(int j=0; j<=V; j++){
+          f[i][j]=f[i-1][j];
+          if(j>=v) f[i][j]=max(f[i][j],f[i][j-v]+w);
+      }
   }
+  cout << f[n][V] << endl;
   ```
-## 语法  
-- STL的用法探索
-- 与上面两章的侧重点（概念）稍有不同，更侧重实用
-### 
+- 一维DP
+  ```cpp
+  cin >> n >> m;
+  for(int i=1; i<=n; i++)
+      scanf("%d%d",&v[i],&w[i]);
+  for(int i=1; i<=n; i++){
+      for(int j=v[i]; j<=m; j++) // 这里不再需要从0开始循环
+          f[j]=max(f[j],f[j-v[i]]+w[i]);
+  }
+  cout << f[m];
+  ```
