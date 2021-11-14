@@ -4,7 +4,10 @@
   - 课程的前半部分是在追赶式的学习理解C++的底层，或者说最重要的实质：指针、引用，以及一些重要的使C++不同于其他语言的极其powerful的概念：const、virtual
   - 混杂了语法学习和头脑风暴的前半阶段
   - 过渡到后半程，好像有了连接的感觉：底层的强大的概念组合在一起产生了各种不同的东西，这就是c++的魅力吧：`clean`以及`re-use`
+- [Modern C++, Qian Bo](https://www.youtube.com/playlist?list=PL5jc9xFGsL8FWtnZBeTqZBbniyw0uHyaH)
+  - TODO
 ## 主题分类
+- 按大专题类型进行展开
 ### 内存相关
 #### 引用、指针
 - reference
@@ -214,6 +217,8 @@
 #### operator new/delete
 - 重载new/delete operator(new_handler)的一个重要的用途：帮助`debug memory leak`
 ## 三岁知识点
+- 三岁知识点的收罗、整理
+- 目标：融会贯通后开辟移动至主题专区
 ### Resource Acquisition Is Initialization
 - RAII（Resource Acquisition Is Initialization）是由c++之父Bjarne Stroustrup提出的，中文翻译为资源获取即初始化，他说：使用局部对象来管理资源的技术称为资源获取即初始化；这里的资源主要是指操作系统中有限的东西如内存、网络套接字等等，局部对象是指存储在栈的对象，它的生命周期是由操作系统来管理的，**无需人工介入**
 ### explicit constructor
