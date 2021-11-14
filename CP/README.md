@@ -126,7 +126,6 @@
       ```
   - protected
     - `Base的public到了Derived是protected，Base的protected到了Derived还是protected`
-    - 
       ```cpp
       class B:protected D{};
       ```
@@ -137,12 +136,77 @@
       ```
 - 继承的二元性(`Duality` of inheritance)
   - Interface
+    - pure virtual function
+    - non-virtual public function
   - Implementation
+    - protected function
+    - non-virtual public function
+> 讨论：'protected' function provides implementation only; in another word, 'protected' protect base function being overriden; in another word, derived class can only use it, not overriding it
+  ```cpp
+  /*
+  output:
+    Hello World!
+    B bark
+    D speak!
+    D wisper
+  */
+  class B{
+    private:
+    protected:
+    void wisper(){cout << "B wisper" << endl;}
+    public:
+    void bark(){ cout << "B bark" << endl; }
+    virtual void speak(){ cout << "B speak" << endl; }
+};
+
+class D: public B{
+    private:
+    protected:
+    void wisper(){cout << "D wisper" << endl;}
+    public:
+    void bark(){cout << "D bark!" << endl;}
+    virtual void speak() { 
+        cout << "D speak!" << endl;
+        wisper();
+    }
+};
+
+int main() {
+    std::cout << "Hello World!\n";
+    B *bd=new D;
+    bd->bark();
+    bd->speak(); // 如过D中没有wisper，那么会打印：B wisper
+    
+    //bd->wisper(); //error: wisper is a protected member of 'B'
+}
+  ```
 #### virtual
 #### composition(HAS-A) over inheritance(IS-A)
 ### operator
+#### type conversion
+- `operator Type(){}`
+  ```cpp
+  class B{
+      public:
+      operator string() const {
+          return "x";
+      }
+  };
+
+  int main() {
+      std::cout << "Hello World!\n";
+      B b;
+      cout << (string)b << endl; // x
+      cout << string(b) << endl; // x
+  }
+  ```
 #### operator new/delete
 ## 三岁知识点
+### Resource Acquisition Is Initialization
+- RAII（Resource Acquisition Is Initialization）是由c++之父Bjarne Stroustrup提出的，中文翻译为资源获取即初始化，他说：使用局部对象来管理资源的技术称为资源获取即初始化；这里的资源主要是指操作系统中有限的东西如内存、网络套接字等等，局部对象是指存储在栈的对象，它的生命周期是由操作系统来管理的，**无需人工介入**
+### explicit constructor
+- 在constructor前面加上explicit关键字，可以保证compiler能检测到implicit conversion并throw
+- 参考：[explicit constructor](https://stackoverflow.com/questions/121162/what-does-the-explicit-keyword-mean)
 ### rvalue & lvalue
 ### namespace & using
 ### compiler generated functions
