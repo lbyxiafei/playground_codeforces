@@ -186,6 +186,13 @@
 - 一个基指针指向子对象，如果调用的函数是virtual，那么运行的就是子类的函数，否则，运行的依旧是基类
   - [Code参考](####inheritance)
 #### composition(HAS-A) over inheritance(IS-A)
+- Recommended：不要造Car-Family，去造车的部件的class(abstract)，而后造车的class，来inherite各种部件
+  ```cpp
+  class xCar:public Car{
+    SteeringWheel *p_steerwheel=new SteeringWheel(123);
+    Accelerator *p_ac=new Accelerator(345);
+  };
+  ```
 ### operator
 #### type conversion
 - `operator Type(){}`
@@ -212,7 +219,46 @@
 - 在constructor前面加上explicit关键字，可以保证compiler能检测到implicit conversion并throw
 - 参考：[explicit constructor](https://stackoverflow.com/questions/121162/what-does-the-explicit-keyword-mean)
 ### rvalue & lvalue
+- lvalue: `An object that occupies some identifiable location in memory.`
+- rvalue: `Any object that is not a lvalue.`
+- lvalue can be implicitly transferred to rvalue.
+  ```cpp
+  int i=1;
+  int x=i; // i is lvalue, used as rvalue here
+  ```
+- rvalue should be explicitly used to create a lvalue
+  ```cpp
+  int v[5];
+  *(v+3)=4; // v+3是一个rvalue，*(v+3)变成了lvalue
+  ```
 ### namespace & using
+- using的两种用法：
+  - using directively：`bring all namespace members into current scope`
+    ```cpp
+    using namespace std;
+    ```
+  - using declaratively: `bring a member from base class to current class's scope`
+    - using can also be used to overcome `name hiding`
+    ```cpp
+    class B{
+      public:
+      void func(){cout << '!' << endl;}
+      void output(int x){cout << x << endl;}
+    };
+    class D:private B{
+      public:
+      using B::func; // 这里using使得原本private的func函数（private继承）变成public
+      using B::output; // 如果没有这一行，d.output(3)会出现name hiding的error
+      void test(){func();} // 这里的func是D继承自B的private func
+      void output(){cout << '?' << endl;}
+    };
+    int main() {
+      D d;
+      d.func();
+      d.test();
+      d.output(3);
+    }
+    ```
 ### compiler generated functions
 - Copy constructor(`Dog d2(d1)`).
   ```cpp
