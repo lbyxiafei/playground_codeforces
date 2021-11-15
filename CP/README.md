@@ -1,5 +1,28 @@
 [toc]
 # Algorithm
+## 前缀和、差分
+### 前缀和
+### 差分
+- 差分操作：在一个范围[a,b]加上一个增量x：`arr[a]+=x, arr[b+1]+=-x`
+- 差分性质：对差分数组进行前缀和操作，可得原数组
+- 例题：[LC.数组互补的最小操作](https://leetcode.com/problems/minimum-moves-to-make-array-complementary/)
+  - 这道题目有难度，且有些偏：核心是一个松弛贪心式的思路，还需要额外的映射到差分数组上，不易想到：
+    - ${(逆向)松弛操作}\stackrel{映射}{\longrightarrow}{差分数组}$
+    ```cpp
+    int minMoves(vector<int>& nums, int limit) {
+      vector<int> arr(2*limit+2);
+      int res=1e9,l=0,r=nums.size()-1, t=0;
+      while(l<r){
+        int a=nums[l++], b=nums[r--];
+        arr[2]+=2, arr[2*limit+1]+=-2;
+        arr[1+min(a,b)]+=-1, arr[limit+max(a,b)+1]+=1;
+        arr[a+b]+=-1, arr[a+b+1]+=1;
+      }
+      for(int i=2; i<arr.size()-1; i++)
+        t+=arr[i], res=min(res,t);
+      return res;
+    }
+    ```
 ## 排序
 ### 快速选择
 - 给定无序数组，求从小到大的第k个数，例题：[AC.第k个数](https://www.acwing.com/activity/content/problem/content/820/)
@@ -167,4 +190,49 @@
           f[j]=max(f[j],f[j-v[i]]+w[i]);
   }
   cout << f[m];
+  ```
+## 几何
+- 常用算法：
+  - 扫描线
+  - 区间数组求和
+### 矩阵面积
+- 给定多个矩阵（平行于x、y轴），求所有矩阵的面积之和，要求去重。
+- 解法：收集每个矩阵的x轴坐标，对该数组排序去重，从左往右2个一对儿扫描数组。对每组x坐标对儿：找到所有包含x对儿的矩阵，并记录矩阵的y轴起始点，而后求出y轴起始点组成的区间数组的总长度，与x对儿长度相乘。如此累加所有x对儿的值，就是总面积
+  - 该解法具有通用性，适用一切平行x、y轴的矩阵求面积
+  - 简单概括为：映射矩阵x轴坐标，针对x对儿，扫描矩阵集合找出包含、重合的所有矩阵的y区间，计算对应y轴区间和，累加求出面积
+- 华点：横扫x轴的方式是以`x对儿`为单位，而非单一坐标；对于每个x对儿，需要再次扫描矩阵集合以找到y轴区间数组，这里有种`x对儿和矩阵整体集合互相独立、decouple的感觉`
+- 涉及其他算法：y轴区间数组求和，是经典的区间贪心问题
+- 例题：[LC.Rectangle Area II](https://leetcode.com/problems/rectangle-area-ii/)
+  ```cpp
+  int rectangleArea(vector<vector<int>>& rts) {
+    vector<int> X;
+    for(auto&& e:rts) X.push_back(e[0]), X.push_back(e[2]);
+    sort(X.begin(),X.end());
+    X.erase(unique(X.begin(),X.end()),X.end());
+    auto calc=[&](int a, int b){
+      vector<pair<int,int>> arr;
+      for(auto&& e:rts)
+        if(e[0]<=a && e[2]>=b)
+          arr.emplace_back(e[1],e[3]);
+      sort(arr.begin(),arr.end());
+      int t=0, start=0, end=0;
+      for(auto&& e:arr){
+        int l=e.first, r=e.second;
+        if(l>end){
+          t+=end-start;
+          start=l;
+          end=r;
+        }
+        else end=max(end,r);
+      }
+      t+=end-start;
+      return (long long)t*(b-a);
+    };
+    int res=0;
+    for(int i=1; i<X.size(); i++){
+      int a=X[i-1], b=X[i];
+      res=((long long)res+calc(a,b))%1000000007;
+    }
+    return res;
+  }
   ```
