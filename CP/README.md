@@ -236,3 +236,53 @@
     return res;
   }
   ```
+## 博弈论
+- 看似思维复杂，然现阶段遇到的题目均只有2名玩家互动，而这个互动的关系与结果可以用一个相对简单的方程表示出来
+- 因此，找到互动方程，后对其套用一些常规算法的iteration，基本可以算作应对此一大类博弈论的套路
+- 华点：对于互动方程+常规iteration为何能够play optimal是最大的思维跳跃
+- 总结：`互动方程+iteration`
+## 高级数据结构
+### 平板电视/pbds
+  - Member functions:
+    - `order_of_key(x)`：返回x的排名
+    - `find_by_order(k)`：返回第k小的元素的iterator
+    ```cpp
+    #include <ext/pb_ds/assoc_container.hpp>
+    #include <ext/pb_ds/tree_policy.hpp>
+
+    using namespace __gnu_pbds;
+
+    typedef tree<
+        int,
+        null_type,
+        less<int>,
+        rb_tree_tag,
+        tree_order_statistics_node_update>
+        ordered_set;
+    typedef tree<
+        pair<int, int>,
+        null_type,
+        less<pair<int, int>>,
+        rb_tree_tag,
+        tree_order_statistics_node_update>
+        ordered_multiset;
+
+    int main{
+      ordered_set S;
+      // {4}
+      S.insert(4);
+      assert(4==*S.find_by_order(0));
+      assert(S.end()==S.find_by_order(100));
+      // {1,4}
+      S.insert(1);
+      assert(0==S.order_of_key(1));
+      // {1,3,4}
+      S.insert(3);
+      assert(1==S.order_of_key(2));
+      assert(1==S.order_of_key(3));
+      assert(3==*S.lower_bound(2));
+      assert(3==S.order_of_key(1e9));
+
+      return 0;
+    }
+    ```

@@ -197,7 +197,65 @@
   };
   ```
 ### operator
-#### type conversion
+- C++最具特色的强大功能之一：重载运算符
+- 普遍形式：`T& operator?(T& lhs, T& rhs){}`
+  - 问号代表运算符，三个T之间没有必然联系
+  - 第一个T表示返回结果类型，第二个是`left hand side`，第三个是`right hand side`
+  ```cpp
+  vector<int>& operator*(vector<int>& A, vector<int>& B){
+    for(int i=0; i<A.size(); i++) A[i]*=B[i];
+    return A;
+  }
+
+  int main() {
+    vector<int> A{1,2,3}, B{2,3,4};
+    auto C=A*B;
+    for(auto x:C) cout << x << ' '; // {2,6,12}
+    cout << endl;
+  }
+  ```
+#### 输入(>>)，输出(<<) operator
+- 以stringstream为例：
+  ```cpp
+  struct Cat {
+    string name;
+    int age;
+  };
+
+  // ostream(可以是stringstream，也可以是cout，等)和Cat之间的<<关系
+  // cout << c;
+  ostream &operator<<(ostream &sm, Cat &c) {
+    sm << "Cat's name: " << c.name << ", age: " << c.age << endl;
+    return sm;
+  }
+
+  // istream(可以是stringstream，cout，等)和cat之间的>>关系
+  // cin >> c.age >> c.name; // 如果是cin，那么手动输入age和name，ss的话可以预存
+  istream &operator>>(istream &sm, Cat &c) {
+    sm >> c.name >> c.age;
+    return sm;
+  }
+
+  int main(){
+    stringstream ss;
+
+    int x = 15;
+    // stringstream 当做缓存用以暂存数据不同形式
+    ss << x << " Hex: " << hex << x << " Oct: " << oct << x;
+    cout << ss.str() << endl;
+    ss.str(string());  //清空ss，或者：ss.str("")也可以
+
+    // 重载iostream对Cat的io运算符
+    Cat c1{"BoLuo", 1}, c2;
+    cout << c1;
+    ss << "BenLei" << ' ' << 2;
+    ss >> c2;
+    cout << c2;
+
+    return 0;
+  }
+  ```
+#### type conversion operator
 - `operator Type(){}`
   ```cpp
   class B{
@@ -335,9 +393,38 @@
 - STL的用法探索
 - 高级先进的数据结构、library的语法和使用指南：pbds
 - 与上面两章的侧重点（概念）稍有不同，更侧重实用
-### STL
-#### vector
+### 基础 
 #### string
-#### array
-### 高级数据结构、library
-#### pbds
+- string的几种不同的定义方式
+  - char: `string s(2,'a');` 
+  - vector: `string s(arr);`
+  - literal string: `string s("abc");`
+- member functions:
+  - `resize`：甚至可以起到right padding的作用：
+    ```cpp
+    string s("abc");
+    s.resize(5,'!');
+    assert("abc!!"==s);
+    ```
+#### constructor
+- TODO
+#### try/catch/exception
+- TODO
+### STL
+#### non-member functions
+- `count`/`count_if`
+  ```cpp
+  vector<int> arr{1,2,3};
+  assert(1==count(arr.begin(),arr.end(),1));
+  assert(2==count_if(arr.begin(),arr.end(),[](int x){return x&1;}));
+  ```
+- `for_each`
+  ```cpp
+  vector<int> arr{1,2,3};
+  for_each(arr.begin(),arr.end(),[](int& x){x++;}); // {2,3,4}，注意这里x是引用类型
+  ```
+#### member functions
+##### vector
+
+##### string
+##### array
