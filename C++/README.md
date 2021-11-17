@@ -425,6 +425,3 @@
   ```
 #### member functions
 ##### vector
-
-##### string
-##### array
