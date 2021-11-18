@@ -27,68 +27,8 @@ typedef unsigned long long ULL;
 typedef pair<int, int> PII;
 
 #pragma region C++ Intro
-// constructor的语法
-//  Struct/ClassName(params): params(p_val) {...}
-struct Catio {
-  int age;
-  string name;
-  Catio *brother, *sister;
 
-  // 注意：与其他语言不同之处是多了“冒号”，冒号之后的区域叫：initialization_list section
-  Catio() : brother(nullptr), sister(nullptr) {}
-  // initialization_list section可以直接调用前面的constructor
-  Catio(int _a, string _n) : Catio() {
-    age = _a;
-    name = _n;
-  }
-  // 注意：下面这个mixed：mem-init + constructor却不行
-  // Error: a deligata delegating constructor cannot have other mem-initializers
-  // Catio(string _n) : name(_n), Catio() {}
-
-  // 也可以直接赋值
-  Catio(int _a, string _n, Catio *_b, Catio *_s) : age(_a), name(_n), brother(_b), sister(_s) {}
-};
-
-ostream &operator<<(ostream &sm, Catio &cat) {
-  return sm << "Name:" << cat.name << ", age:" << cat.age
-            << ", brother:" << cat.brother << ", sister:" << cat.sister
-            << endl;
-}
-
-// constexpr简单应用
-//  constexpr int A() {return 3;} // Forces the computation to happen
-//                                      at compile time
-//  int arr[A()+2];               // Created an array of size 5
-constexpr int cube(int x) {return x*x*x;}
-
-// functional programming：一种全新的programming model
-// template-lambda模板 function
-// 万物皆可template化
-template<typename func>
-void filter(func f, vector<int> arr){
-  for(auto x:arr)
-    if(f(x))
-      cout << x << ' ';
-  cout << endl;
-}
-
-// constructor的不同的定义方式，尤其是initialization_list的展开
-// constexpr优化运算时间演示
-// string,string literal与char array的一些讨论
-// functional-programming: template-lambda pattern/lambda function的template式应用
 void IntroUtils() {
-  // constructor #1
-  cout << "IntroUtils" << endl;
-  Catio c;
-  cout << c;
-  // constructor #2
-  Catio c1(3, "BenLei"), c2(3, "BuoLuo", &c1, &c1);
-  cout << c1;
-  cout << c2;
-
-  // constexpr的运用可以优化运行时间！
-  cout << cube(111) << endl;
-
   // 关于string literal，char array，char*的一些讨论
   // string作为mutable的存在，比较简单粗暴
   // string literal的定义方式:
@@ -141,14 +81,6 @@ void IntroUtils() {
   //swap(*(cx),*(cx+1)); //error
   assert(*cx==122);
 
-  // lambda与template的结合
-  auto calc=[](int x){
-    return x<10;
-  };
-  vector<int> arr{1,20,3,40,5,60};
-  filter(calc,arr);
-
-  assert(1==2);
 }
 #pragma endregion
 

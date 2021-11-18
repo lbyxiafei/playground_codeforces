@@ -389,11 +389,26 @@
     ostream& operator<<(ostream& os, const &C);
   }
   ```
+### functional programming
+- functional programming：一种全新的programming model
+- template-lambda模板 function
+  ```cpp
+  //万物皆可template化
+  template<typename func>
+  void filter(func f, vector<int> arr){
+    for(auto x:arr)
+      if(f(x))
+        cout << x << ' ';
+    cout << endl;
+  }
+  ```
 ## 语法  
 - STL的用法探索
 - 高级先进的数据结构、library的语法和使用指南：pbds
 - 与上面两章的侧重点（概念）稍有不同，更侧重实用
 ### 基础 
+#### constexpr
+- Force the computation to happen at compile time.
 #### string
 - string的几种不同的定义方式
   - char: `string s(2,'a');` 
@@ -407,7 +422,30 @@
     assert("abc!!"==s);
     ```
 #### constructor
-- TODO
+- constructor的语法
+  - Struct/ClassName(params): params(p_val) {...}
+    ```cpp
+    struct Catio {
+      int age;
+      string name;
+      unordered_map<int,int> cache;
+      Catio *brother, *sister;
+
+      // 注意：与其他语言不同之处是多了“冒号”，冒号之后的区域叫：initialization_list section
+      Catio() : cache(), brother(nullptr), sister(nullptr) {}
+      // initialization_list section可以直接调用前面的constructor
+      Catio(int _a, string _n) : Catio() {
+        age = _a;
+        name = _n;
+      }
+      // 注意：下面这个mixed：mem-init + constructor却不行
+      // Error: a deligata delegating constructor cannot have other mem-initializers
+      // Catio(string _n) : name(_n), Catio() {}
+
+      // 也可以直接赋值
+      Catio(int _a, string _n, Catio *_b, Catio *_s) : age(_a), name(_n), brother(_b), sister(_s) {}
+    };
+    ```
 #### try/catch/exception
 - TODO
 ### STL
