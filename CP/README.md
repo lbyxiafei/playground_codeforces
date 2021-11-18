@@ -156,6 +156,17 @@
         return dfs2(dfs2,m,0);
     }
     ```
+## 图论
+### Floyd
+- 暴力三重循环，循环顺序：k-i-j
+- 例题：[AC.Floyd求最短路](https://www.acwing.com/problem/content/description/856/)
+  ```cpp
+  for(int k=1; k<=n; k++)
+    for(int i=1; i<=n; i++)
+      for(int j=1; j<=n; j++)
+        if(f[i][k]<INF && f[k][j]<INF)
+          f[i][j]=min(f[i][j],f[i][k]+f[k][j]);
+  ```
 ## DP
 ### 背包
 - 背包要诀：
