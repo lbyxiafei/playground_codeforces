@@ -402,7 +402,7 @@
     cout << endl;
   }
   ```
-## 语法  
+## 语法
 - STL的用法探索
 - 高级先进的数据结构、library的语法和使用指南：pbds
 - 与上面两章的侧重点（概念）稍有不同，更侧重实用
@@ -410,6 +410,60 @@
 #### constexpr
 - Force the computation to happen at compile time.
 #### string
+- 关于`string literal`，`char array`，`char*`和`string`的一些讨论
+  - `string`作为mutable的存在，相对简单粗暴
+  - `string literal`的定义方式:
+    - `const char *a="abc";` 
+    - `char *a="abc"` 这里特别注意：compile会过，但会有warning，并且会被强制转换成上面一行
+      - 看似定义了char array，实际是string literal
+  - char array的定义方式：
+    - `char chs[]="abcdef";`
+  - char*:
+    - `char *ch;` 可以指向char array，也可以指向string literal
+      - 如上所示，如果从定义出发，只能指代string literal
+      - 要想指代char array，只有间接可能：
+        ```cpp
+        char *ch;
+        char chs[]="char array";
+        ch=chs;
+        ```
+- 一些实验性测试：
+  ```cpp
+  // 附带string到char array的朴素转换方式
+  string s="string";
+  swap(s[0],s[1]);
+  assert(s[0]=='t');
+  char chs3[s.size()];
+  forn(i,s.size()) chs3[i]=s[i]; // Now: "tsring"
+  swap(*chs3,*(chs3+1));
+  assert(*chs3=='s');
+  // char array朴素定义
+  char chs[7]={'s','t','r','i','n','g','\0'};
+  char *b=chs;
+  swap(*(b),*(b+1));
+  assert(*b=='t');
+  // char array更具一般化的定义
+  // 附带和char指针的互动
+  char chs2[8]="abcdefg";
+  char *a=chs2;
+  swap(*a, *(a+6));
+  assert(*a=='g');
+  swap(*chs2,*(chs2+6));
+  assert(*chs2=='a');
+  // wchar_t array的一般优化定义，以及与char指针的互动
+  wchar_t chs4[]=L"abc";
+  assert(*chs4==97); // 'a'->97
+  swap(*(chs4),*(chs4+1));
+  assert(*chs4==98);
+  // wchar_t版本的string literal #1
+  const wchar_t chs5[]=L"abc";
+  //swap(*(chs5),*(chs5+1)); // error
+  assert(*chs5==97);
+  // wchar_t版本的string literal #2
+  const wchar_t *cx=L"zabcde";
+  //swap(*(cx),*(cx+1)); //error
+  assert(*cx==122);
+  ```
 - string的几种不同的定义方式
   - char: `string s(2,'a');` 
   - vector: `string s(arr);`

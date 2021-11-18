@@ -26,64 +26,6 @@ typedef long long LL;
 typedef unsigned long long ULL;
 typedef pair<int, int> PII;
 
-#pragma region C++ Intro
-
-void IntroUtils() {
-  // 关于string literal，char array，char*的一些讨论
-  // string作为mutable的存在，比较简单粗暴
-  // string literal的定义方式:
-  //  const char *a="abc"; 
-  //  char *a="abc" // 这里特别注意：compile会过，但会有warning，并且会被强制转换成上面一行
-  //                // 看似定义了char array，实际是string literal
-  // char array的定义方式：
-  //  char chs[]="abcdef";
-  // 关于char指针:
-  //  char *ch可以指向char array，也可以指向string literal
-  //  如上所示，如果从定义出发，只能指代string literal
-  //  要想指代char array，只有间接可能：
-  //    char *ch;
-  //    char chs[]="char array";
-  //    ch=chs;
-
-  // string，简单粗暴
-  // 附带string到char array的朴素转换方式
-  string s="string";
-  swap(s[0],s[1]); 
-  assert(s[0]=='t');
-  char chs3[s.size()];
-  forn(i,s.size()) chs3[i]=s[i]; // Now: "tsring"
-  swap(*chs3,*(chs3+1));
-  assert(*chs3=='s');
-  // char array朴素定义
-  char chs[7]={'s','t','r','i','n','g','\0'};
-  char *b=chs;
-  swap(*(b),*(b+1));
-  assert(*b=='t');
-  // char array更具一般化的定义
-  // 附带和char指针的互动
-  char chs2[8]="abcdefg";
-  char *a=chs2;
-  swap(*a, *(a+6));
-  assert(*a=='g');
-  swap(*chs2,*(chs2+6));
-  assert(*chs2=='a');
-  // wchar_t array的一般优化定义，以及与char指针的互动
-  wchar_t chs4[]=L"abc";
-  assert(*chs4==97); // 'a'->97
-  swap(*(chs4),*(chs4+1));
-  assert(*chs4==98);
-  // wchar_t版本的string literal #1
-  const wchar_t chs5[]=L"abc";
-  //swap(*(chs5),*(chs5+1)); // error
-  assert(*chs5==97);
-  // wchar_t版本的string literal #2
-  const wchar_t *cx=L"zabcde";
-  //swap(*(cx),*(cx+1)); //error
-  assert(*cx==122);
-
-}
-#pragma endregion
-
 #pragma region STL
 // transform(it1,it2,target,lambda)/变形：对source(s)数组进行自定义变形并写入target数组
 // accumulate(it1,it2,num,functor)：累加/乘
@@ -194,9 +136,6 @@ int main() {
   freopen("input.txt", "r", stdin);
   freopen("output.txt", "w", stdout);
 #endif
-  if(true){
-    IntroUtils();
-    STLVectorUtils();
-  }
+
   return 0;
 }
