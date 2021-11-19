@@ -504,16 +504,58 @@
 - TODO
 ### STL
 #### non-member functions
-- `count`/`count_if`
+##### `count`/`count_if`
   ```cpp
   vector<int> arr{1,2,3};
   assert(1==count(arr.begin(),arr.end(),1));
   assert(2==count_if(arr.begin(),arr.end(),[](int x){return x&1;}));
   ```
-- `for_each`
+##### `for_each`
   ```cpp
   vector<int> arr{1,2,3};
   for_each(arr.begin(),arr.end(),[](int& x){x++;}); // {2,3,4}，注意这里x是引用类型
   ```
+##### `transform`
+- 单数组转换
+  ```cpp
+  vector<int> A{1,2,3}, B{4,5,6}, C{0,0,0};
+  transform(A.begin(),A.end(),C.begin(),[](int x){return x+1;}); // C: {2,3,4}
+  ```
+- 双数组转换
+  ```cpp
+  vector<int> A{1,2,3}, B{4,5,6}, C{0,0,0};
+  transform(A.begin(),A.end(),B.begin(),C.begin(),[](int x,int y){return x+y;}); // C: {5,7,9}
+  ```
+##### `accumulate`
+- 累加（default）`int tot=accumulate(arr.begin(),arr.end(),0);`
+- 累乘 `int prod=accumulate(arr.begin(),arr.end(),1,multiplies<int>())`
+- 自定义/lambda
+  - 举例：将数组用dash相连（string形式）
+    ```cpp
+    string& link(string& lhs, int& rhs){
+      string t=lhs.size()?"-":"";
+      lhs+=t+to_string(rhs);
+      return lhs;
+    }
+
+    vector<int> arr{1,2,3};
+    string s;
+    auto res=accumulate(arr.begin(),arr.end(),s,link); // 1-2-3
+    ```
+##### `partial_sum`
+- 使用方式和`accumulate`类似，99%的被用于生成`前缀和`：`partial_sum(arr.begin(),arr.end(),sarr.begin()+1);`
+- 前缀积同理：`partial_sum(arr.begin(),arr.end(),sarr.begin()+1,multiplies<int>());`
+- 自定义/lambda
+  - 似乎只能是同样数据类型的数组之间转换
+    ```cpp
+    string& link(string& lhs, string& rhs){
+      string t=lhs.size()?"-":"";
+      lhs+=t+rhs;
+      return lhs;
+    }
+
+    vector<string> arr{"1","2","3"}, S(arr.size()+1);
+    partial_sum(arr.begin(),arr.end(),S.begin()+1,link); // {"","1","1-2","1-2-3"}
+    ```
 #### member functions
-##### vector
+##### TODO

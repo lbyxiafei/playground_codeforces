@@ -27,7 +27,6 @@ typedef unsigned long long ULL;
 typedef pair<int, int> PII;
 
 #pragma region STL
-// transform(it1,it2,target,lambda)/变形：对source(s)数组进行自定义变形并写入target数组
 // accumulate(it1,it2,num,functor)：累加/乘
 // partial_sum(it1,it2,target,functor)：前缀和/积
 // partition/stable_partition(it1,it2,lambda)：参考quick sort的partition
@@ -35,42 +34,7 @@ typedef pair<int, int> PII;
 // rotate/rotate_copy(it1,it2,it3,target)：以round robin的方式轮转/旋转数组
 // all_of/none_of/any_of(it1,it2,lambda)：非常实用的f(it1,it2,lambda)的判定数组状态的语法
 void STLVectorUtils() {
-  vector<int> A{1, 2, 3, 4}, B(A.size()), C(A.size());
-  // transform #1: 对原数组(A)进行变形，写入目标数组
-  transform(A.begin(), A.end(),
-            B.begin(),
-            [](int x) {
-              return -x;
-            });
-  forn(i, B.size()) cout << B[i] << ' ';
-  cout << endl;
-  // transform #2: 对两个原数组(A+B)进行相关变形，写入目标数组
-  transform(A.begin(), A.end(),
-            B.begin(),
-            C.begin(),
-            [](int x, int y) {
-              return x + y;
-            });
-  forn(i, C.size()) cout << C[i] << ' ';
-  cout << endl;
-
-  // accumulate 累加
-  int x = accumulate(A.begin(), A.end(), 0);
-  cout << x << endl;
-  // accumulate 累乘
-  x = accumulate(A.begin(), A.end(), 1, multiplies<int>());
-  cout << x << endl;
-
-  // partial_sum: 前缀和
-  vector<int> arr{1, 2, 3, 4}, sarr(arr.size() + 1);
-  partial_sum(arr.begin(), arr.end(), sarr.begin() + 1);
-  forn(i, sarr.size()) cout << sarr[i] << ' ';
-  cout << endl;
-  // partial_sum: 前缀积
-  partial_sum(arr.begin(), arr.end(), sarr.begin() + 1, multiplies<int>());
-  forn(i, sarr.size()) cout << sarr[i] << ' ';
-  cout << endl;
-
+ 
   // partition：和quick sort的partition原理一样，但无法得知pivot idx最终位置
   auto lessThan10 = [](int x) {
     return x < 10;
