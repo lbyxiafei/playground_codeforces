@@ -557,5 +557,24 @@
     vector<string> arr{"1","2","3"}, S(arr.size()+1);
     partial_sum(arr.begin(),arr.end(),S.begin()+1,link); // {"","1","1-2","1-2-3"}
     ```
+##### `merge`/`inplace_merge`
+- 前提：需要merge的inputs必须是已经排好序的
+- merge：`merge(A.begin(),A.end(),B.begin(),B.end(),C.begin());`
+- inplace_merge：`inplace_merge(A.begin(),A.begin()+k,A.end());`
+  - 将已排好序的[A,A+k)与[A+k,A+n)部分进行in place merge
+  - 可以用来替代merge sort的后半部logic
+##### `partition`/`stable_partition`
+- partition：`auto iter=partition(arr.begin(),arr.end(),func);`
+  - func自定义，例如可以是小于pivot返回true（quick sort前半部逻辑）
+  - 可以用于替代quick sort的前半部logic
+- stable_partition：`auto iter=stable_partition(arr.begin(),arr.end(),lessThan10);`
+##### `rotate`/`rotate_copy`
+- rotate: `rotate(arr.begin(),arr.begin()+k,arr.end());`
+  - 把[arr,arr+k)与[arr+k,arr+n)进行翻转（param用法与inplace_merge的类似）
+- rotate_copy: `rotate_copy(arr.begin(),arr.begin()+k,arr.end(),B.begin());`
+##### `all_of`/`none_of`/`any_of`
+- `all_of(arr.begin(),arr.end(),func);`：所有arr的元素都必须满足func，返回true
+- `any_of(arr.begin(),arr.end(),func);`：任意arr的元素满足func，返回true
+- `none_of(arr.begin(),arr.end(),func);`：所有arr的元素都不满足func，返回true
 #### member functions
 ##### TODO
