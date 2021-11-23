@@ -202,6 +202,44 @@
   }
   cout << f[m];
   ```
+#### 多重背包
+- 朴素做法
+  - 以二维0-1背包模板，按照`物品-体积-决策`的顺序进行循环即可
+  - 例题：[AC.多重背包](https://www.acwing.com/activity/content/problem/content/999/)
+- 二进制优化法
+  - 将物品个数(决策)进行`二进制分解、打散`，合并入一个新的V,W数组中，进而把问题转化成了0-1背包问题
+  - 例题：[AC.多重背包](https://www.acwing.com/activity/content/problem/content/1000/)
+    ```cpp
+    int main(){
+      int n,m;
+      cin >> n >> m;
+      vector<int> V,W;
+      for(int i=0; i<n; i++){
+        int v,w,s;
+        cin >> v >> w >> s;
+        for(int i=0; (1<<i)<=s; i++){
+          int t=1<<i;
+          V.push_back(t*v);
+          W.push_back(t*w);
+          s-=t;
+        }
+        if(s) V.push_back(s*v), W.push_back(s*w);
+      }
+      // 为展示作用，这里是二维版本，OJ中会MLE，转换成一维即可AC
+      n=V.size();
+      int f[n+1][m+1];
+      memset(f,0,sizeof f);
+      for(int i=1; i<=n; i++){
+        int v=V[i-1], w=W[i-1];
+        for(int j=0; j<=m; j++){
+          f[i][j]=f[i-1][j];
+          if(j>=v) f[i][j]=max(f[i][j],f[i-1][j-v]+w);
+        }
+      }
+      cout << f[n][m] << endl;
+      return 0;
+    }
+    ```
 ## 几何
 - 常用算法：
   - 扫描线
