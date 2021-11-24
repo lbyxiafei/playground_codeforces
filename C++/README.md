@@ -283,6 +283,7 @@
 - 在constructor前面加上explicit关键字，可以保证compiler能检测到implicit conversion并throw
 - 参考：[explicit constructor](https://stackoverflow.com/questions/121162/what-does-the-explicit-keyword-mean)
 ### rvalue & lvalue
+#### rvalue/lvalue基本概念
 - lvalue: `An object that occupies some identifiable location in memory.`
 - rvalue: `Any object that is not a lvalue.`
 - lvalue can be implicitly transferred to rvalue.
@@ -295,6 +296,37 @@
   int v[5];
   *(v+3)=4; // v+3是一个rvalue，*(v+3)变成了lvalue
   ```
+#### rvalue reference
+- What is `rvalue reference`?
+  ```cpp
+  int a=5;    // a是lvalue
+  int &b=a;   // b是lvalue reference
+  int &&c     // c是rvalue reference
+  ```
+- Rvalue reference被用来：
+  - `1.Moving semantics`
+    ```cpp
+    class boVector{
+      int size;
+      double *arr_;
+    public:
+      // Copy constructor:
+      boVector(const boVector& rhs){
+        size=rhs.size();
+        arr_=new double[size];
+        for(int i=0; i<size; i++){arr_[i]=rhs[i];}
+      }
+      // Move constructor:
+      boVector(const boVector&& rhs){
+        size=rhs.size();
+        arr_=rhs.arr_;
+        rhs.arr_=nullptr;
+      }
+      ~boVector(){delete arr_;}
+    };
+    ```
+  - `2.Perfect forwarding`
+  
 ### namespace & using
 - using的两种用法：
   - using directively：`bring all namespace members into current scope`

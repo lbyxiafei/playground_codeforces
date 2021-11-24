@@ -335,3 +335,19 @@
       return 0;
     }
     ```
+## 数学
+### 质因数分解
+  ```cpp
+  unordered_map<int,int> freq;
+  for(int i=2; i*i<=x; i++){
+    while(x%i==0){ 
+      x/=i;
+      freq[i]++;
+    }
+  }
+  if(x>1) freq[x]++;
+  ```
+#### 约数问题
+- 对于任意自然数n，都可以分解为：$n=p_{1}^{\alpha_{1}}p_{2}^{\alpha_{2}}...p_{k}^{\alpha_{k}}$
+  - 对于任意n，求约数个数：$(1+\alpha_1)(1+\alpha_2)...(1+\alpha_k)$
+  - 对于任意n，求约数之和：$(p_1^0+p_1^1+...+p_1^{\alpha_1})(p_2^0+p_2^1+...+p_2^{\alpha_2})...(p_k^0+p_k^1+...+p_k^{\alpha_k})$
