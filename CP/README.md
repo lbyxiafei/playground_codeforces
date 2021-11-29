@@ -157,6 +157,53 @@
     }
     ```
 ## 图论
+### Dijkstra
+#### 朴素版Dijkstra & Prim最小生成树
+- 两个算法几乎一模一样，唯一的不同是dist[i]的定义
+  - Dijkstra的dist[i]：节点i到`起点`的最小距离
+  - [朴素Dijkstra]()
+    ```cpp
+    int dijkstra(){
+      dist[1]=0;
+      for(int i=0; i<n; i++){
+        int t=-1;
+        for(int j=1; j<=n; j++){
+          if(!st[j] && (t==-1 || dist[j]<dist[t]))
+            t=j;
+        }
+        st[t]=true;
+        if(dist[t]==INF) return -1;
+        for(int j=1; j<=n; j++){
+          dist[j]=min(dist[j],dist[t]+g[t][j]); // 唯一区别
+        }
+      }
+      return dist[n];
+    }
+    ```
+  - Prim的dist[i]：节点i到`当前最小生成树`的最小距离
+  - [Prim最小生成树例题](https://www.acwing.com/activity/content/problem/content/924/)
+    ```cpp
+    int prim(){
+      dist[1]=0;
+      int res=0;
+      for(int i=0; i<n; i++){
+        int t=-1;
+        for(int j=1; j<=n; j++){
+          if(!st[j] && (!~t || dist[t]>dist[j]))
+            t=j;
+        }
+        st[t]=true;
+        if(dist[t]==INF) return INF;
+        res+=dist[t];
+        for(int j=1; j<=n; j++){
+          dist[j]=min(dist[j], g[t][j]); //唯一区别
+        }
+      }
+      return res;
+    }
+    ```
+#### 堆优化版Dijkstra
+- no-op
 ### Floyd
 - 暴力三重循环，循环顺序：k-i-j
 - 例题：[AC.Floyd求最短路](https://www.acwing.com/problem/content/description/856/)

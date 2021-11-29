@@ -326,7 +326,22 @@
     };
     ```
   - `2.Perfect forwarding`
-  
+    - `T&&`是universal reference，用法原理如下
+      ```cpp
+      template<typename T>
+      void relay(T&& arg){
+        foo(std::foward<T>(arg));
+      }
+
+      // Implementation of std::forward()
+      template<typename T>
+      T&& forward(typename remove_reference<T>::type& arg){
+        return static_cast<T&&>(arg);
+      }
+      ```
+    - `std::move()` vs `std::forward()`
+      - move(): turn arg into an rvalue type
+      - forward(): turn arg into type of T&&
 ### namespace & using
 - using的两种用法：
   - using directively：`bring all namespace members into current scope`
