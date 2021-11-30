@@ -204,6 +204,78 @@
     ```
 #### 堆优化版Dijkstra
 - no-op
+### SPFA
+- 算法核心：st状态数组表示的是in-queue
+#### SPFA最短路
+- [SPFA求最短路例题](https://www.acwing.com/activity/content/problem/content/922/)
+  ```cpp
+  int spfa(){
+    queue<int> q;
+    q.push(1);
+    dist[1]=0;
+    st[1]=true;
+    while(q.size()){
+      int u=q.front(); q.pop();
+      st[u]=false;
+      for(int i=g[u]; ~i; i=ne[i]){
+        int v=e[i];
+        if(dist[v]>dist[u]+w[i]){
+          dist[v]=dist[u]+w[i];
+          if(!st[v]){
+            q.push(v);
+            st[v]=true;
+          }
+        }
+      }
+    }
+    return dist[n];
+  }
+  ```
+#### SPFA判断负回路
+- 在最短路的基础上，加上另一个状态数组cnt[i]，表示当前节点i被其直接邻居以更小距离更新形式访问到的次数
+  - 当cnt[i]==n时，即为负环，因为i的邻居上限最多为n-1
+- [SPFA判断负环例题](https://www.acwing.com/activity/content/problem/content/921/)
+  ```cpp
+  bool spfa(){
+    queue<int> q;
+    for(int i=1; i<=n; i++) q.push(i), st[i]=true;
+    while(q.size()){
+      int u=q.front(); q.pop();
+      st[u]=false;
+      for(int i=g[u]; ~i; i=ne[i]){
+        int v=e[i];
+        if(dist[v]>dist[u]+w[i]){
+          dist[v]=dist[u]+w[i];
+          cnt[v]=cnt[u]+1;
+          if(cnt[v]==n) return true;
+          if(!st[v]){
+            st[v]=true;
+            q.push(v);
+          }
+        }
+      }
+    }
+    return false;
+  }
+  ```
+### BellmanFord
+- 算法核心：纯粹的以`边`为单位，进行遍历
+- [有边数限制的最短路例题](https://www.acwing.com/activity/content/problem/content/922/)
+  ```cpp
+  int bellmanford(){
+    dist[1]=0;
+    for(int i=0; i<k; i++){
+      memcpy(pr, dist, sizeof dist);
+      for(auto&& e:edges){
+        int a=e[0], b=e[1], c=e[2];
+        if(pr[a]!=INF && pr[a]+c<dist[b]){
+          dist[b]=pr[a]+c;
+        }
+      }
+    }
+    return dist[n];
+  }
+  ```
 ### Floyd
 - 暴力三重循环，循环顺序：k-i-j
 - 例题：[AC.Floyd求最短路](https://www.acwing.com/problem/content/description/856/)
