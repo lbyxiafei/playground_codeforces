@@ -449,6 +449,29 @@
     cout << endl;
   }
   ```
+### user defined literals
+- Restriction: 只能用以下几种形式的params
+  - `char const*`
+  - `unsigned long long`
+  - `long double`
+  - `char const*, std::size_t`
+  - `wchar_t const*, std::size_t`
+  - `char16_t const*, std::size_t`
+  - `char32_t const*, std::size_t`
+- Return value 可以是任意形式
+  ```cpp
+  // 这里的sz被系统自动写入
+  int operator"" _bin(const char* chs, size_t sz){
+    int res=0;
+    for(int i=0; i<sz; i++){
+      res<<=1;
+      res+=chs[i]-'0';
+    }
+    return res;
+  }
+
+  cout << "110"_bin; // 6
+  ```
 ## 语法
 - STL的用法探索
 - 高级先进的数据结构、library的语法和使用指南：pbds
