@@ -410,6 +410,39 @@
   - 两个向量始于同一起点，他们的叉积等于他们所覆盖的三角形面积的两倍（即平行四边形）
   - 如果起点为原点（0,0），则有以上计算公式
   - 向量b如果在向量a的逆时针方向，则$\sin{\theta}$为正
+#### 凸包
+- 所有坐标按x、y轴排序
+- stack收录前两个点，对当前点和stack内的点进行叉积计算
+- 保持stack内的点的$\sin{\theta}$正负符号一致
+- 清空stack，从后往前再来一遍
+```cpp
+int cross(int x1, int y1, int x2, int y2){
+  return x1*y2-x2*y1;
+}
+
+int area(vector<int>& a, vector<int>& b, vector<int>& c){
+  return cross(b[0]-a[0], b[1]-a[1], c[0]-a[0], c[1]-a[1]);
+}
+
+vector<vector<int>> outerTrees(vector<vector<int>>& trees) {
+  vector<vector<int>> stk;
+  set<vector<int>> S;
+  sort(trees.begin(),trees.end());
+  for(auto&& e:trees){
+    while(stk.size()>1 && area(stk[stk.size()-2],stk.back(),e)>0) stk.pop_back();
+    stk.push_back(e);
+  }
+  for(auto&& e:stk) S.insert(e);
+  stk.clear();
+  for(int i=trees.size()-1; i>=0; i--){
+    auto e=trees[i];
+    while(stk.size()>1 && area(stk[stk.size()-2],stk.back(),e)>0) stk.pop_back();
+    stk.push_back(e);
+  }
+  for(auto&& e:stk) S.insert(e);
+  return vector<vector<int>>(S.begin(),S.end());
+}
+```
 ## 博弈论
 - 看似思维复杂，然现阶段遇到的题目均只有2名玩家互动，而这个互动的关系与结果可以用一个相对简单的方程表示出来
 - 因此，找到互动方程，后对其套用一些常规算法的iteration，基本可以算作应对此一大类博弈论的套路
