@@ -34,6 +34,9 @@ $\pm,\mp,\times,\cdot,\div,\sqrt[9]{3},\sqrt{3},\mid,\log,\lg,\ln,\sum,\prod,\co
 
 $\le,\leq,\ge,\geq,\ne,\neq,\not=,\not>,\not<,\approx,\equiv$
 
+### 向量
+$\vec{x}$
+
 ### 集合运算符
 
 $\emptyset,\in,\notin,\subset,\subseteq,\not\subset,\supset,\supseteq,\not\supset$
