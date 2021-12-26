@@ -272,6 +272,20 @@
       cout << string(b) << endl; // x
   }
   ```
+#### functor/operator()
+- One of the primary goal when overloading `operator()` is to create a functor. 
+- A functor acts just like a function, but it has the advantages that it is stateful, meaning it can keep data reflecting its state between calls.
+```cpp
+struct Accumulator
+{
+    int counter = 0;
+    int operator()(int i) { return counter += i; }
+}
+...
+Accumulator acc;
+cout << acc(10) << endl; //prints "10"
+cout << acc(20) << endl; //prints "30"
+```
 #### operator new/delete
 - 重载new/delete operator(new_handler)的一个重要的用途：帮助`debug memory leak`
 ## 三岁知识点

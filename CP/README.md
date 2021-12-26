@@ -118,6 +118,60 @@
         };
         return calc(right)-calc(left-1);
         ```
+## Union Find
+- UF的模板极尽简单，难度在于如何运用上：尽量掌握经典用法。
+- 模板
+```cpp
+// 并查集模板
+class UnionFind {
+public:
+  vector<int> parent;
+  vector<int> size;
+  int n;
+  // 当前连通分量数目
+  int setCount;
+
+public:
+  UnionFind(int _n): n(_n), setCount(_n), parent(_n), size(_n, 1) {
+    iota(parent.begin(), parent.end(), 0);
+  }
+
+  int findset(int x) {
+    return parent[x] == x ? x : parent[x] = findset(parent[x]);
+  }
+
+  bool unite(int x, int y) {
+    x = findset(x);
+    y = findset(y);
+    if (x == y) {
+      return false;
+    }
+    if (size[x] < size[y]) {
+      swap(x, y);
+    }
+    parent[y] = x;
+    size[x] += size[y];
+    --setCount;
+    return true;
+  }
+
+  bool connected(int x, int y) {
+    x = findset(x);
+    y = findset(y);
+    return x == y;
+  }
+  void isolate(int x) {
+    if(x != parent[x]){
+      parent[x] = x;
+      size[x] = 1;
+      ++setCount;
+    }
+  }
+};
+```
+- [经典例题：找出知晓秘密的所有专家](https://leetcode-cn.com/problems/find-all-people-with-secret/)
+  - 本题关键在于，相同时间开会的情形如何处理，解决方法就是两两连接同一时间开会的专家，会开完之后，孤立所有没知道秘密的专家
+  - 这是第一次出现孤立(isolate)操作的题目，核心十分简单：`p[x]=x`
 ## DFS
 ### 折半DFS
 - 如果数据范围在3、40的样子，基本已经是明示了
