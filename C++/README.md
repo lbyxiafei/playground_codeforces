@@ -286,6 +286,24 @@ Accumulator acc;
 cout << acc(10) << endl; //prints "10"
 cout << acc(20) << endl; //prints "30"
 ```
+#### User Defined Literals
+- 工程向实用技巧，经典用处：度量衡的标注与转换
+```cpp
+int operator"" _bin(const char* chs, size_t sz){
+  int res=0;
+  for(int i=0; i<sz; i++){
+    res<<=1;
+    res+=chs[i]-'0';
+  }
+  return res;
+}
+
+int main() {
+  cout << "1"_bin << endl;    // 1
+  cout << "11"_bin << endl;   // 3
+  cout << "110"_bin << endl;  // 6
+}
+```
 #### operator new/delete
 - 重载new/delete operator(new_handler)的一个重要的用途：帮助`debug memory leak`
 ## 三岁知识点
