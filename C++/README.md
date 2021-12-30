@@ -309,6 +309,28 @@ int main() {
 ## 三岁知识点
 - 三岁知识点的收罗、整理
 - 目标：融会贯通后开辟移动至主题专区
+### C++ Compiler Generated Functions
+#### C++ 03
+1. default constructor (generated only if no constructor is declared by user)
+2. copy constructor (generated only if no 3,4,5,6 declared by user)
+3. copy assignment operator (generated only if no 2,4,5,6 declared by user)
+4. destructor
+#### C++ 11
+5. move constructor (generated only if no 2,3,4,6 declared by user)
+6. move assignment operator (generated only if no 2,3,4,5 declared by user)
+```cpp
+class Dog{
+  // C++ 03
+  Dog();                        // default constructor
+  Dog(const Dog&);              // copy constructor
+  Dog& operator=(const Dog&);   // copy assignment operator
+  ~Dog();                       // destrcutor
+
+  // C++ 11
+  Dog(Dog&&);                   // move constructor
+  Dog& operator=(Dog&&);        // move assignment operator
+}
+```
 ### Resource Acquisition Is Initialization
 - RAII（Resource Acquisition Is Initialization）是由c++之父Bjarne Stroustrup提出的，中文翻译为资源获取即初始化，他说：使用局部对象来管理资源的技术称为资源获取即初始化；这里的资源主要是指操作系统中有限的东西如内存、网络套接字等等，局部对象是指存储在栈的对象，它的生命周期是由操作系统来管理的，**无需人工介入**
 ### explicit constructor
