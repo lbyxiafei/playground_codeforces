@@ -1,5 +1,15 @@
 [toc]
 # Algorithm
+## 双指针
+### 左右指针
+- i从左往右，j从右往左
+### 快慢指针
+- i每次走一格，j每次走两格
+### sliding window/追赶式指针
+- r先移动，l在其后追赶
+### 数组嵌套/站肩式指针
+- i先移动，idx控制嵌套的数组随i的变化而变
+  - 经典例题：[LC2008.出租车最高盈利](https://leetcode.com/problems/maximum-earnings-from-taxi/)
 ## 前缀和、差分
 ### 前缀和
 ### 差分
