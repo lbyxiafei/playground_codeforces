@@ -8,8 +8,37 @@
   - TODO
 ## 主题分类
 - 按大专题类型进行展开
-### 内存相关
-#### 引用、指针
+### 内存
+- 内存分为以下几个区域/segments:
+  - 栈/stack
+    - 函数内部的自动变量
+  - 堆/heap
+    - 关键字`new`产生的对象所在
+  - 全局数据区/Data segment
+    - 主要存储全局变量，static，const的内容，分为`initialized`和`uninitialized`两个部分
+  - 代码区/Text(Code) segment
+    - 存储可执行代码
+#### stack
+  - Stored in computer RAM just like the heap.
+  - Variables created on the stack will go `out of scope` and are `automatically deallocated`.
+  - Much faster to allocate in comparison to variables on the heap.
+  - Implemented with an actual stack data structure.
+  - Stores local data, return addresses, used for parameter passing.
+  - Can have a stack overflow when too much of the stack is used (mostly from infinite or too deep recursion, very large allocations).
+  - Data created on the stack can be used without pointers.
+  - You would use the stack if you know exactly how much data you need to allocate before compile time and it is not too big.
+  - Usually has a maximum size already determined when your program starts.
+#### heap
+  - Stored in computer RAM just like the stack.
+  - In C++, variables on the heap must be destroyed manually and never fall out of scope. The data is freed with delete, delete[], or free.
+  - Slower to allocate in comparison to variables on the stack.
+  - Used on demand to allocate a block of data for use by the program.
+  - Can have fragmentation when there are a lot of allocations and deallocations.
+  - In C++ or C, data created on the heap will be pointed to by pointers and allocated with `new` or `malloc` respectively.
+  - Can have allocation failures if too big of a buffer is requested to be allocated.
+  - You would use the heap if you don't know exactly how much data you will need at run time or if you need to allocate a lot of data.
+  - Responsible for memory leaks.
+### 引用、指针
 - reference
   - 为什么会有引用？
     - c++作为c语言的进阶版，必然会保留指针，但是为什么会有引用呢？
@@ -47,6 +76,7 @@
   int *x=&t;
   assert(x==&t);
   ```
+### 关键字
 #### const
 - 定义：A **compile time** constraint that an object can not be modified.
   - 然而也可以有例外，尽管看上去更像是quirk：
@@ -94,30 +124,16 @@
       ```
 - logic constness and bitwise constness
   - TODO
-#### stack, heap
-- stack
-  - Stored in computer RAM just like the heap.
-  - Variables created on the stack will go `out of scope` and are `automatically deallocated`.
-  - Much faster to allocate in comparison to variables on the heap.
-  - Implemented with an actual stack data structure.
-  - Stores local data, return addresses, used for parameter passing.
-  - Can have a stack overflow when too much of the stack is used (mostly from infinite or too deep recursion, very large allocations).
-  - Data created on the stack can be used without pointers.
-  - You would use the stack if you know exactly how much data you need to allocate before compile time and it is not too big.
-  - Usually has a maximum size already determined when your program starts.
-- heap
-  - Stored in computer RAM just like the stack.
-  - In C++, variables on the heap must be destroyed manually and never fall out of scope. The data is freed with delete, delete[], or free.
-  - Slower to allocate in comparison to variables on the stack.
-  - Used on demand to allocate a block of data for use by the program.
-  - Can have fragmentation when there are a lot of allocations and deallocations.
-  - In C++ or C, data created on the heap will be pointed to by pointers and allocated with `new` or `malloc` respectively.
-  - Can have allocation failures if too big of a buffer is requested to be allocated.
-  - You would use the heap if you don't know exactly how much data you will need at run time or if you need to allocate a lot of data.
-  - Responsible for memory leaks.
-- static
-  - Global variable
+#### static
+  - 与const相比，const更多体现在`read-only`，而static在不同场合下体现出不同特点：
+    - member field/func: `save space, convenient`
+    - non-member field/func: `protect`, 保护data/func不被其他文件实用
   - Only one copy for the entire program, no matter how many threads exist
+##### static member field
+##### static member function
+##### static 全局变量
+##### static 局部变量
+##### static function
 ### 多态
 #### inheritance
 - 首先，任何情况下Base class的private member均无法被Derived class继承
