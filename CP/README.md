@@ -167,6 +167,79 @@
     }
     ```
 ## 图论
+### 拓扑排序
+- Topological sort，整体框架既可以是DFS，也可以是BFS
+- 从遍历的角度看，DFS是`从后往前`，BFS则`从前往后`
+#### BFS-Topo
+```cpp template
+void traverse_bfs(){
+    vector<int> arr;
+    queue<int> q;
+    unordered_map<int,int> cnt;
+    for(auto&& [a,B]:g){
+        for(auto b:B){
+            cnt[b]++;
+        }
+    }
+    for(int i=0; i<n; i++)
+        if(!cnt[i])
+            q.push(i);
+    if(q.empty()){
+        cout << "Circle!";
+        return;
+    }
+    while(q.size()){
+        auto u=q.front(); q.pop();
+        // do stuff...
+        arr.push_back(u);
+        for(int v:g[u]){
+            cnt[v]--;
+            if(!cnt[v]){
+                q.push(v);
+            }
+        }
+    }
+    if(q.size()) cout << "Circle!";
+    else{
+        cout << "BFS traverse: ";
+        out();
+    }
+}
+```
+#### DFS-Topo
+```cpp template
+// unordered_set<int> st: node already in stack
+// unordered_set<int> S: node already been visited before(not this round)
+bool dfs(int u){
+    if(st.count(u)) return false;
+    if(S.count(u)) return true;
+
+    st.insert(u), S.insert(u);
+
+    for(int v:g[u]){
+        if(!dfs(v)) return false;
+        // do stuff...
+    }
+
+    st.erase(u);
+    // do stuff...
+    arr.push_back(u);
+    return true;
+}
+
+void traverse_dfs(){
+    arr.clear(), st.clear(), S.clear();
+    for(int i=0; i<n; i++){
+        if(!dfs(i)){
+            cout << "Circle!" << endl;
+            break;
+        }
+    }
+    reverse(arr.begin(),arr.end());
+    cout << "DFS traverse: ";
+    out();
+}
+```
 ### Dijkstra
 #### 朴素版Dijkstra & Prim最小生成树
 - 两个算法几乎一模一样，唯一的不同是dist[i]的定义
