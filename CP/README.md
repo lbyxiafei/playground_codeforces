@@ -38,7 +38,7 @@
 - 给定无序数组，求从小到大的第k个数，例题：[AC.第k个数](https://www.acwing.com/activity/content/problem/content/820/)
   - 基本思路：套用快速排序的模板，在此基础上，根据k和r-start的比较进行下一层递归
   - 华点：这里与k进行比较的不是r，因为k是与start的相对距离，而r是与0的相对距离，需要对r进行一次处理确保一致性
-    ```cpp
+    ```cpp template_quick_sort
     int quick_select(vector<int>& arr, int start, int end, int k){
         if(start==end) return arr[start];
         int l=start-1, r=end+1, mid=start+end>>1, x=arr[mid];
@@ -54,6 +54,30 @@
         else return quick_select(arr,r+1,end,k-t-1); // 注意这里需要额外k--，因为k是0-indexed
     }
     ```
+## String
+### KMP
+```cpp template_kmp
+void kmp(string s, string p){
+    int m, n;
+    m=p.size(), n=s.size();
+    p=' '+p, s=' '+s;
+    vector<int> ne(m+1);
+    for(int l=0,r=2; r<=m; r++){
+        while(l && p[l+1]!=p[r]) l=ne[l];
+        if(p[l+1]==p[r]) l++;
+        ne[r]=l;
+    }
+    
+    for(int l=0,r=1; r<=n; r++){
+        while(l && p[l+1]!=s[r]) l=ne[l];
+        if(p[l+1]==s[r]) l++;
+        if(l==m){
+            cout << r-m << ' ';
+            l=ne[l];
+        }
+    }
+}
+```
 ## Array
 ### 算两次原理
 - 经典算法，很多数组类问题都可以套用：
@@ -171,7 +195,7 @@
 - Topological sort，整体框架既可以是DFS，也可以是BFS
 - 从遍历的角度看，DFS是`从后往前`，BFS则`从前往后`
 #### BFS-Topo
-```cpp template
+```cpp template_topo_bfs
 void traverse_bfs(){
     vector<int> arr;
     queue<int> q;
@@ -207,7 +231,7 @@ void traverse_bfs(){
 }
 ```
 #### DFS-Topo
-```cpp template
+```cpp template_topo_dfs
 // unordered_set<int> st: node already in stack
 // unordered_set<int> S: node already been visited before(not this round)
 bool dfs(int u){
@@ -245,7 +269,7 @@ void traverse_dfs(){
 - 两个算法几乎一模一样，唯一的不同是dist[i]的定义
   - Dijkstra的dist[i]：节点i到`起点`的最小距离
   - [朴素Dijkstra]()
-    ```cpp
+    ```cpp template_dijkstra_plain
     int dijkstra(){
       dist[1]=0;
       for(int i=0; i<n; i++){
@@ -265,7 +289,7 @@ void traverse_dfs(){
     ```
   - Prim的dist[i]：节点i到`当前最小生成树`的最小距离
   - [Prim最小生成树例题](https://www.acwing.com/activity/content/problem/content/924/)
-    ```cpp
+    ```cpp template_prim
     int prim(){
       dist[1]=0;
       int res=0;
@@ -291,7 +315,7 @@ void traverse_dfs(){
 - 算法核心：st状态数组表示的是in-queue
 #### SPFA最短路
 - [SPFA求最短路例题](https://www.acwing.com/activity/content/problem/content/922/)
-  ```cpp
+  ```cpp template_spfa
   int spfa(){
     queue<int> q;
     q.push(1);
@@ -318,7 +342,7 @@ void traverse_dfs(){
 - 在最短路的基础上，加上另一个状态数组cnt[i]，表示当前节点i被其直接邻居以更小距离更新形式访问到的次数
   - 当cnt[i]==n时，即为负环，因为i的邻居上限最多为n-1
 - [SPFA判断负环例题](https://www.acwing.com/activity/content/problem/content/921/)
-  ```cpp
+  ```cpp spfa_negative_circle
   bool spfa(){
     queue<int> q;
     for(int i=1; i<=n; i++) q.push(i), st[i]=true;
@@ -344,7 +368,7 @@ void traverse_dfs(){
 ### BellmanFord
 - 算法核心：纯粹的以`边`为单位，进行遍历
 - [有边数限制的最短路例题](https://www.acwing.com/activity/content/problem/content/922/)
-  ```cpp
+  ```cpp template_bellmanford
   int bellmanford(){
     dist[1]=0;
     for(int i=0; i<k; i++){
@@ -362,7 +386,7 @@ void traverse_dfs(){
 ### Floyd
 - 暴力三重循环，循环顺序：k-i-j
 - 例题：[AC.Floyd求最短路](https://www.acwing.com/problem/content/description/856/)
-  ```cpp
+  ```cpp template_floyd
   for(int k=1; k<=n; k++)
     for(int i=1; i<=n; i++)
       for(int j=1; j<=n; j++)
@@ -575,7 +599,7 @@ vector<vector<int>> outerTrees(vector<vector<int>>& trees) {
 ### Union Find
 - UF的模板极尽简单，难度在于如何运用上：尽量掌握经典用法。
 - 模板
-```cpp
+```cpp template_union_find
 // 并查集模板
 class UnionFind {
 public:
@@ -631,7 +655,7 @@ public:
   - Member functions:
     - `order_of_key(x)`：返回x的排名
     - `find_by_order(k)`：返回第k小的元素的iterator
-    ```cpp
+    ```cpp template_pbds
     #include <ext/pb_ds/assoc_container.hpp>
     #include <ext/pb_ds/tree_policy.hpp>
 
