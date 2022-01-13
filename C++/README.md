@@ -125,15 +125,23 @@
 - logic constness and bitwise constness
   - TODO
 #### static
+  - static fields位于内存的全局数据区/data segment
   - 与const相比，const更多体现在`read-only`，而static在不同场合下体现出不同特点：
     - member field/func: `save space, convenient`
     - non-member field/func: `protect`, 保护data/func不被其他文件实用
   - Only one copy for the entire program, no matter how many threads exist
 ##### static member field
+- 所有class的对象均共享同一个static field
+- 经典应用：银行系统中的利率是static，既节省空间，又便于调整
 ##### static member function
+- 在函数内部，只能访问同一class下的static field/func
+- 可以被non-static调用
 ##### static 全局变量
+- 文件内可见，文件外不可见，即无法被其他文件调用(即extern不适用)
 ##### static 局部变量
+- 同上(static 全局变量)，但作用域更小(局部作用域)
 ##### static function
+- 文件内可见，文件外不可见，即无法被其他文件调用(即extern不适用)
 ### 多态
 #### inheritance
 - 首先，任何情况下Base class的private member均无法被Derived class继承
