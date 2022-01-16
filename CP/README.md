@@ -566,8 +566,48 @@ for(int i=0; i<n; i++){
 cout << f[m];
 ```
 #### 混合背包
+- [AC.混合背包](https://www.acwing.com/activity/content/problem/content/1276/)
 ``` cpp template_MixedPacks
+int n,m;
 
+void ZeroOnePack(vector<int>& f, int v, int w){
+    for(int j=m; j>=v; j--)
+        f[j]=max(f[j],f[j-v]+w);
+}
+
+void CompletePack(vector<int>& f, int v, int w){
+    for(int j=v; j<=m; j++)
+        f[j]=max(f[j],f[j-v]+w);
+}
+
+void MultiplePack(vector<int>& f, int v, int w, int s){
+    if(m/v>=s) {
+        CompletePack(f,v,w);
+        return;
+    }
+    int cur=0;
+    for(int i=1; i+cur<=s; i<<=1){
+        ZeroOnePack(f,v*i,w*i);
+        cur+=i;
+    }
+    if(cur<s) {
+        int t=s-cur;
+        ZeroOnePack(f,v*t,w*t);
+    }
+}
+
+void solve(){
+    cin >> n >> m;
+    vector<int> f(m+1);
+    for(int i=0; i<n; i++){
+        int v,w,s;
+        cin >> v >> w >> s;
+        if(!~s) ZeroOnePack(f,v,w);
+        else if(!s) CompletePack(f,v,w);
+        else MultiplePack(f,v,w,s);
+    }
+    cout << f[m];
+}
 ```
 ## 几何
 - 常用算法：
