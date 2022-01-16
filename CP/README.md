@@ -400,72 +400,171 @@ void traverse_dfs(){
   - `1维`状态数组下，只有`完全`背包的第二层循环是`从左往右`
     - 而二维情况下，体积层的循环一致遵循从左往右即可
 - 背包属于是`组合类DP`。之前努力试图强记套路，然而从最原始的二维定义出发，这其实是一种相较于线性DP更高级复杂的DP
+#### 01背包
+- [AC.01背包](https://www.acwing.com/activity/content/problem/content/997/)
+``` cpp template_ZeroOnePack
+// 朴素版
+int n, m;
+cin >> n >> m;
+vector<vector<int>> f(n+1,vector<int>(m+1));
+for(int i=1; i<=n; i++){
+    int v,w;
+    cin >> v >> w;
+    // 这里需要从0开始
+    for(int j=0; j<=m; j++){
+        f[i][j]=f[i-1][j];
+        if(j>=v) f[i][j]=max(f[i][j],f[i-1][j-v]+w);
+    }
+}
+cout << f[n][m] << endl;
+
+// 一维优化版
+int n,m;
+cin >> n >> m;
+vector<int> f(m+1);
+
+for(int i=0; i<n; i++){
+    int v,w;
+    cin >> v >> w;
+    // 这里则只要循环到当前v即可
+    for(int j=m; j>=v; j--)
+        f[j]=max(f[j],f[j-v]+w);
+}
+cout << f[m];
+```
 #### 完全背包
-- 二维DP
-  ```cpp
-  int n,V;
-  cin >> n >> V;
-  vector<vector<int>> f(n+1, vector<int>(V+1));
-  for(int i=1; i<=n; i++){
-      int v,w;
-      cin >> v >> w;
-      // 这里需要从0开始循环，因为再后面一行需要取值
-      for(int j=0; j<=V; j++){
-          f[i][j]=f[i-1][j];
-          if(j>=v) f[i][j]=max(f[i][j],f[i][j-v]+w);
-      }
-  }
-  cout << f[n][V] << endl;
-  ```
-- 一维DP
-  ```cpp
-  cin >> n >> m;
-  for(int i=1; i<=n; i++)
-      scanf("%d%d",&v[i],&w[i]);
-  for(int i=1; i<=n; i++){
-      for(int j=v[i]; j<=m; j++) // 这里不再需要从0开始循环
-          f[j]=max(f[j],f[j-v[i]]+w[i]);
-  }
-  cout << f[m];
-  ```
+- [AC.完全背包]()
+```cpp template_CompletePack
+// 朴素版
+int n,V;
+cin >> n >> V;
+vector<vector<int>> f(n+1, vector<int>(V+1));
+for(int i=1; i<=n; i++){
+    int v,w;
+    cin >> v >> w;
+    // 这里需要从0开始循环，因为再后面一行需要取值
+    for(int j=0; j<=V; j++){
+        f[i][j]=f[i-1][j];
+        if(j>=v) f[i][j]=max(f[i][j],f[i][j-v]+w);
+    }
+}
+cout << f[n][V] << endl;
+
+// 一维优化版
+cin >> n >> m;
+for(int i=1; i<=n; i++)
+    scanf("%d%d",&v[i],&w[i]);
+for(int i=1; i<=n; i++){
+    for(int j=v[i]; j<=m; j++) // 这里不再需要从0开始循环
+        f[j]=max(f[j],f[j-v[i]]+w[i]);
+}
+cout << f[m];
+```
 #### 多重背包
 - 朴素做法
   - 以二维0-1背包模板，按照`物品-体积-决策`的顺序进行循环即可
   - 例题：[AC.多重背包](https://www.acwing.com/activity/content/problem/content/999/)
-- 二进制优化法
-  - 将物品个数(决策)进行`二进制分解、打散`，合并入一个新的V,W数组中，进而把问题转化成了0-1背包问题
-  - 例题：[AC.多重背包](https://www.acwing.com/activity/content/problem/content/1000/)
-    ```cpp
-    int main(){
-      int n,m;
-      cin >> n >> m;
-      vector<int> V,W;
-      for(int i=0; i<n; i++){
-        int v,w,s;
-        cin >> v >> w >> s;
-        for(int i=0; (1<<i)<=s; i++){
-          int t=1<<i;
-          V.push_back(t*v);
-          W.push_back(t*w);
-          s-=t;
-        }
-        if(s) V.push_back(s*v), W.push_back(s*w);
-      }
-      // 为展示作用，这里是二维版本，OJ中会MLE，转换成一维即可AC
-      n=V.size();
-      int f[n+1][m+1];
-      memset(f,0,sizeof f);
-      for(int i=1; i<=n; i++){
-        int v=V[i-1], w=W[i-1];
-        for(int j=0; j<=m; j++){
-          f[i][j]=f[i-1][j];
-          if(j>=v) f[i][j]=max(f[i][j],f[i-1][j-v]+w);
-        }
-      }
-      cout << f[n][m] << endl;
-      return 0;
+- 二进制优化
+    - 将物品个数(决策)进行`二进制优化、分解`，合并入一个新的V,W数组中，进而把问题转化成了0-1背包问题
+        > 此处的**二进制优化**和**快速幂**共享一个知识点：`任意自然数都可以分解成二进制数之和`，但又有所不同：`快速幂只需分解目标值为二进制之和；多重背包的二进制优化相比更进一步地强调累加的二进制之和不能大于给定目标值(证明参看：背包九讲)`
+- 例题：[AC.庆功宴会](https://www.acwing.com/activity/content/problem/content/1275/)
+```cpp template_MultiplePack
+// 朴素版：二维+线性遍历
+int m, n;
+cin >> n >> m;
+vector<vector<int>> f(n+1,vector<int>(m+1));
+for(int i=1; i<=n; i++){
+    int v, w, s;
+    cin >> v >> w >> s;
+    for(int j=0; j<=m; j++){
+        f[i][j]=f[i-1][j];
+        for(int k=1; k<=s; k++){
+            if(k*v<=j){
+                f[i][j]=max(f[i][j],f[i-1][j-k*v]+k*w);
+            }
+         }
+     }
+}
+cout << f[n][m] << endl;
+
+// 升级版：二维+二进制优化
+int n, m;
+cin >> n >> m;
+vector<int> V, W;
+for(int i=0; i<n; i++){
+    int v, w, s;
+    cin >> v >> w >> s;
+    int cur=0;
+    for(int j=1; j+cur<=s; j<<=1){
+        V.push_back(v*j);
+        W.push_back(w*j);
+        cur+=j;
     }
-    ```
+    if(cur<s){
+        int t=s-cur;
+        V.push_back(v*t);
+        W.push_back(w*t);
+    }
+}
+int N=V.size();
+vector<vector<int>> f(N+1,vector<int>(m+1));
+for(int i=1; i<=N; i++){
+    int v=V[i-1], w=W[i-1];
+    for(int j=0; j<=m; j++){
+        f[i][j]=f[i-1][j];
+        if(j>=v) f[i][j]=max(f[i][j],f[i-1][j-v]+w);
+    }
+}
+cout << f[N][m] << endl;
+
+// 终极版I：一维+二进制优化
+int n, m;
+cin >> n >> m;
+vector<int> V,W;
+while(n--){
+    int v,w,s;
+    cin >> v >> w >> s;
+    int cur=0;
+    for(int j=1; j+cur<=s; j<<=1){
+        V.push_back(v*j);
+        W.push_back(w*j);
+        cur+=j;
+    }
+    if(cur<s){
+        int t=s-cur;
+        V.push_back(v*t);
+        W.push_back(w*t);
+    }
+}
+vector<int> f(m+1);
+for(int i=0; i<V.size(); i++)
+    for(int j=m; j>=V[i]; j--)
+        f[j]=max(f[j],f[j-V[i]]+W[i]);
+cout << f[m] << endl;
+
+// 终极版II：针对I做出了代码简化调整
+int n,m;
+cin >> n >> m;
+vector<int> f(m+1);
+for(int i=0; i<n; i++){
+    int v, w, s;
+    cin >> v >> w >> s;
+    int cur=0;
+    for(int j=1; j+cur<=s; j<<=1){
+        for(int k=m; k>=v*j; k--){
+            f[k]=max(f[k],f[k-v*j]+w*j);
+        }
+        cur+=j;
+    }
+    if(cur<s){
+        int t=s-cur;
+        for(int k=m; k>=t*t; k--){
+            f[k]=max(f[k],f[k-v*t]+w*t);
+        }
+    }
+}
+cout << f[m];
+```
 ## 几何
 - 常用算法：
   - 扫描线
