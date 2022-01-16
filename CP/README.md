@@ -433,7 +433,7 @@ for(int i=0; i<n; i++){
 cout << f[m];
 ```
 #### 完全背包
-- [AC.完全背包]()
+- [AC.完全背包](https://www.acwing.com/activity/content/problem/content/998/)
 ```cpp template_CompletePack
 // 朴素版
 int n,V;
@@ -564,6 +564,10 @@ for(int i=0; i<n; i++){
     }
 }
 cout << f[m];
+```
+#### 混合背包
+``` cpp template_MixedPacks
+
 ```
 ## 几何
 - 常用算法：
