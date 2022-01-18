@@ -611,7 +611,19 @@ void solve(){
 ```
 #### 二维费用背包
 - [AC.二维费用背包](https://www.acwing.com/activity/content/problem/content/1277/)
-```cpp
+```cpp template_TwoDimensionalPack
+int n,V,M;
+cin >> n >> V >> M;
+vector<vector<int>> f(V+1,vector<int>(M+1));
+for(int i=0; i<n; i++){
+    int v,m,w;
+    cin >> v >> m >> w;
+    for(int j=V; j>=v; j--)
+        for(int k=M; k>=m; k--){
+            f[j][k]=max(f[j][k],f[j-v][k-m]+w);
+        }
+}
+cout << f[V][M];
 ```
 ## 几何
 - 常用算法：
