@@ -393,6 +393,29 @@ void traverse_dfs(){
         if(f[i][k]<INF && f[k][j]<INF)
           f[i][j]=min(f[i][j],f[i][k]+f[k][j]);
   ```
+### 哈密顿最短路径
+- [AC.哈密顿最短路](https://www.acwing.com/activity/content/problem/content/1011/)
+```cpp template_Hamilton
+int n;
+cin >> n;
+int g[n][n];
+for(int i=0; i<n; i++)
+    for(int j=0; j<n; j++)
+        cin >> g[i][j];
+int f[n][1<<n];
+memset(f,0x3f,sizeof f);
+f[0][1]=0; // NOT f[0][0]=0;
+for(int j=0; j<1<<n; j++){
+    for(int i=0; i<n; i++){
+        if((j>>i)&1) continue;
+        int ns=j|(1<<i);
+        for(int k=0; k<n; k++)
+            if((j>>k)&1)
+                f[i][ns]=min(f[i][ns],f[k][j]+g[k][i]);
+    }
+}
+cout << f[n-1][(1<<n)-1];
+```
 ## DP
 ### 背包
 - 背包要诀：
@@ -624,6 +647,10 @@ for(int i=0; i<n; i++){
         }
 }
 cout << f[V][M];
+```
+#### 分组背包
+``` cpp template_GroupPack
+
 ```
 ## 几何
 - 常用算法：
