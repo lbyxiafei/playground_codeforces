@@ -35,7 +35,22 @@ int main() {
     int T;
     cin >> T;
     forn(_, T) {
-        cout << '?';
+        int n, l;
+        cin >> n >> l;
+        vector<int> cnt(l);
+        forn(i,n) {
+            int x;
+            cin >> x;
+            forn(j,l){
+                int t=x>>j&1;
+                if(t) cnt[j]++;
+            }
+        }
+        int res=0;
+        forn(j,l){
+            if(cnt[j]>n-cnt[j]) res|=1<<j;
+        }
+        cout << res << endl;
     }
 
     return 0;
