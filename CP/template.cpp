@@ -22,9 +22,9 @@ typedef tree<
     rb_tree_tag,
     tree_order_statistics_node_update>
     ordered_multiset;
-typedef long long LL;
-typedef unsigned long long ULL;
-typedef pair<int, int> PII;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
 
 int main() {
 #ifdef _LBY
