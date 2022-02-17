@@ -650,6 +650,19 @@ cout << f[V][M];
 ```
 #### 分组背包
 ``` cpp template_GroupPack
+// 此处i为分组index，即共n组
+for(int i=1; i<=n; i++){
+    for(int j=m; j>=0; j--){
+        // 这里表示i组内的K个不同组合，相互互斥
+        for(int k=1; k<=K; k++){
+            // 注意此处j与V[i][k]，巧妙
+            f[j]=max(f[j], f[j-V[i][k]]+W[i][k]);
+        }
+    }
+}
+```
+#### 有依赖背包 
+``` cpp template_DependentPack
 
 ```
 ## 几何
