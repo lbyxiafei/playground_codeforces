@@ -271,20 +271,21 @@ void traverse_dfs(){
   - [朴素Dijkstra]()
     ```cpp template_dijkstra_plain
     int dijkstra(){
-      dist[1]=0;
-      for(int i=0; i<n; i++){
-        int t=-1;
-        for(int j=1; j<=n; j++){
-          if(!st[j] && (t==-1 || dist[j]<dist[t]))
-            t=j;
+        dist[1]=0;
+        for(int i=0; i<n; i++){
+            int t=-1;
+            for(int j=1; j<=n; j++){
+                // 这里t的行为类比堆优化版出队：同样遵守Dij出队去重原则
+                if(!st[j] && (t==-1 || dist[j]<dist[t]))
+                    t=j;
+            }
+            st[t]=true;
+            if(dist[t]==INF) return -1;
+            for(int j=1; j<=n; j++){
+                dist[j]=min(dist[j],dist[t]+g[t][j]); 
+            }
         }
-        st[t]=true;
-        if(dist[t]==INF) return -1;
-        for(int j=1; j<=n; j++){
-          dist[j]=min(dist[j],dist[t]+g[t][j]); // 唯一区别
-        }
-      }
-      return dist[n];
+        return dist[n];
     }
     ```
   - Prim的dist[i]：节点i到`当前最小生成树`的最小距离
@@ -310,7 +311,35 @@ void traverse_dfs(){
     }
     ```
 #### 堆优化版Dijkstra
-- no-op
+- 去重(`if st[u]: continue`)原则：
+    - BFS入队时去重
+    - Dij出队时去重
+    - A*不去重
+- 时间复杂度`M*log(N)`
+```cpp template_dijkstra
+int dijkstra(int start=1, int end=n){
+    memset(dist, 0x3f, sizeof dist);
+    memset(st, false, sizeof st);
+    priority_queue<pii,vector<pii>,greater<>> q;
+    q.push({0,start});
+    dist[start]=0;
+    while(q.size()){
+        auto cur=q.top(); q.pop();
+        int u=cur.second;
+        if(st[u]) continue;
+        st[u]=true;
+        for(int i=g[u]; ~i; i=ne[i]){
+            int v=e[i];
+            if(dist[u]+w[i]<dist[v]){
+                dist[v]=dist[u]+w[i];
+                q.push({dist[v],v});
+            }
+        }
+    }
+    if(dist[end]==INF) return -1;
+    return dist[end];
+}
+```
 ### SPFA
 - 算法核心：st状态数组表示的是in-queue
 #### SPFA最短路
@@ -662,8 +691,8 @@ for(int i=1; i<=n; i++){
 }
 ```
 #### 有依赖背包 
+- [AC.金明的预算](https://www.acwing.com/activity/content/code/content/2616487/)
 ``` cpp template_DependentPack
-
 ```
 ## 几何
 - 常用算法：
