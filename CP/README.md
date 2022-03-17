@@ -395,8 +395,26 @@ int dijkstra(int start=1, int end=n){
     }
     ```
 ### BellmanFord
-- 算法核心：纯粹的以`边`为单位，进行遍历
+- 算法核心：纯粹的以`边`为单位，遍历更新每个点的最短距离
 - [有边数限制的最短路例题](https://www.acwing.com/activity/content/problem/content/922/)
+    ```cpp template_bellmanford_v2
+    int bellmanford(){
+        vector<int> dist(n+1, INF);
+        dist[1]=0;
+        for(int i=0; i<k; i++){
+            vector<int> t(dist);
+            for(auto&& e:edges){
+                int a=e[0], b=e[1], c=e[2];
+                if(dist[a]!=INF){
+                    t[b]=min(t[b],dist[a]+c);
+                }
+            }
+            dist=t;
+        }
+        return dist[n];
+    }
+    ```
+
     ```cpp template_bellmanford
     int bellmanford(){
         dist[1]=0;
