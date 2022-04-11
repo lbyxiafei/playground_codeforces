@@ -10,6 +10,21 @@
 ### 数组嵌套/站肩式指针
 - i先移动，idx控制嵌套的数组随i的变化而变
   - 经典例题：[LC2008.出租车最高盈利](https://leetcode.com/problems/maximum-earnings-from-taxi/)
+### 矩阵计数
+- 给定矩阵`从左往右、从上往下均递增`,则可以再`O(m+n)`时间内求出矩阵内小于等于给定数值的个数
+- 本题运用的是矩阵的单调性
+```cpp template_matrix_count
+int count(vector<vector<int>>& g, int target){
+    int m=g.size(), n=g[0].size(), res=0;
+    for(int i=0, j=n-1; i<m; i++){
+        while(j>=0 && g[i][j]>target) j--;
+        res+=j+1;
+    }
+    return res;
+}
+```
+- 经常性的和二分、求第k大/小数绑定
+- [LC.2040](https://leetcode.com/submissions/detail/578354674/)
 ## 前缀和、差分
 ### 前缀和
 ### 差分
@@ -33,6 +48,33 @@
       return res;
     }
     ```
+## 回文数
+- 求下一个（更大）回文数
+```cpp template_next_palindrome
+    int half=1, upper=100;
+    while(true){
+        set<int> S;
+        for(int i=0; i<10; i++){
+            string s=to_string(half), t=to_string(half);
+            reverse(t.begin(),t.end());
+            int x=stoi(s+t.substr(1));
+            S.insert(x);
+            int y=stoi(s+t);
+            S.insert(y);
+            half++;
+        }
+        for(auto x:S)
+            cout << x << ' ';
+        
+        if(half>upper) break;
+    }
+```
+## 区间
+### 单点区间插入
+- 可以运用二分、set进行查询优化，由于插入的点只会和前后两个区间有关联，所以时间复杂度是`O(log(n))`
+### 连续区间插入
+- 先插入，再合并
+- 查询、插入的时间复杂度可以达到`O(log(n))`（二分），但由于连续区间可以覆盖n个区间，所以合并过程时间复杂度`O(N)`
 ## 排序
 ### 快速选择
 - 给定无序数组，求从小到大的第k个数，例题：[AC.第k个数](https://www.acwing.com/activity/content/problem/content/820/)
@@ -466,7 +508,7 @@ cout << f[n-1][(1<<n)-1];
 ## DP
 ### 背包
 - 背包要诀：
-  - 循环永远是：物品→体积→决策
+  - 循环永远(一般)是：物品→体积→决策（分组背包是：分组→体积→当前组物品）
   - `1维`状态数组下，只有`完全`背包的第二层循环是`从左往右`
     - 而二维情况下，体积层的循环一致遵循从左往右即可
 - 背包属于是`组合类DP`。之前努力试图强记套路，然而从最原始的二维定义出发，这其实是一种相较于线性DP更高级复杂的DP
