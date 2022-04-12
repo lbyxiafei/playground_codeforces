@@ -1,0 +1,13 @@
+
+- Find files
+	- Powershell
+		- Find files/folders with given name
+			- Get-Childitem -Path C:\ -Include *CMake* -Recurse –force -ErrorAction SilentlyContinue > ~/test.txt
+		- Find only files with given name, no folders
+			- Get-Childitem -Path C:\ -Include *CMake* -File -Recurse –force -ErrorAction SilentlyContinue
+		- Find files with given name and time range
+			- $FindDate=Get-Date -Year 2016 -Month 06 -Day 24
+			- Get-Childitem -Path C:\ -Include *CMake* -File -Recurse –force -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -ge $FindDate -and $_.LastWriteTime -le $FindDate.adddays(1) }
+	- CMD
+		- Find files with given name (/s - recursive, /p - in details)
+			- dir *cmake* c:\*.* /s /p > search_result.txt

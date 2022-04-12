@@ -11,7 +11,7 @@ $branch = "origin "+$branch
 
 # then, push
 Write-Host "Pushing..."
-$push_cmd="git push "+$branch
+$push_cmd="git push "+$branch+" --no-verify"
 Invoke-Expression $push_cmd
 Write-Host "Pushing...Done!"
 
