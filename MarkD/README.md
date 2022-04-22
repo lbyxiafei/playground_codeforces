@@ -7,6 +7,7 @@ Mark Down
 
 
 ##目录
+* [折叠](#折叠)
 * [横线](#横线)
 * [标题](#标题)
 * [文本](#文本)
@@ -36,7 +37,18 @@ Mark Down
 * [表格](#表格) 
 * [表情](#表情)
 
-横线
+# 折叠
+-----------
+<details><summary>python代码</summary>
+
+```python
+print("hello")
+```
+
+</details>
+
+
+# 横线
 -----------
 ***、---、___可以显示横线效果
 
@@ -46,7 +58,7 @@ ___
 
 
 
-标题
+# 标题
 ------
 
 #一级标题
@@ -57,7 +69,7 @@ ___
 ######六级标题
 
 
-文本
+# 文本
 ------
 ###普通文本
 这是一段普通的文本
@@ -114,7 +126,7 @@ ___
 
 斜体、粗体、删除线可混合使用
 
-图片
+# 图片
 ------
 基本格式：
 ```
@@ -140,7 +152,7 @@ https://github.com/guodongxiaren/ImageCache/raw/master/Logo/foryou.gif
 [foryou]:https://github.com/guodongxiaren/ImageCache/raw/master/Logo/foryou.gif
 ```
 
-链接
+# 链接
 ------
 ###链接外部URL
 |#|语法|效果|
@@ -176,7 +188,7 @@ https://github.com/guodongxiaren/ImageCache/raw/master/Logo/foryou.gif
 注意，此时鼠标悬停时显示的文字是图片的title，而非链接本身的title了。
 >本文URL标识符都放置于文末
 
-###锚点
+### 锚点
 其实呢，每一个标题都是一个锚点，和HTML的锚点（`#`）类似，比如我们 
 
 |语法|效果|
@@ -187,19 +199,19 @@ https://github.com/guodongxiaren/ImageCache/raw/master/Logo/foryou.gif
 >以前GitHub对中文支持的不好，所以中文标题不能正确识别为锚点，但是现在已经没问题啦！
 
 
-##列表
-###无序列表
+# 列表
+### 无序列表
 * 昵称：果冻虾仁
 - 别名：隔壁老王
 * 英文名：Jelly
 
-###多级无序列表
+### 多级无序列表
 * 编程语言
     * 脚本语言
         * Python
 
-###有序列表
-####一般效果
+### 有序列表
+#### 一般效果
 就是在数字后面加一个点，再加一个空格。不过看起来起来可能不够明显。    
 面向对象的三个基本特征：
 
@@ -207,7 +219,7 @@ https://github.com/guodongxiaren/ImageCache/raw/master/Logo/foryou.gif
 2. 继承
 3. 多态
 
-####有序列表自动排序
+#### 有序列表自动排序
 也可以在第一行指定`1. `，而接下来的几行用星号`*`（或者继续用数字1. ）就可以了，它会自动显示成2、3、4……。    
 面向对象的七大原则：
 
@@ -219,7 +231,7 @@ https://github.com/guodongxiaren/ImageCache/raw/master/Logo/foryou.gif
 * “迪米特”法则
 * 单一职责原则
 
-####多级有序列表
+#### 多级有序列表
 和无序列表一样，有序列表也有多级结构：  
 
 1. 这是一级的有序列表，数字1还是1
@@ -239,10 +251,10 @@ https://github.com/guodongxiaren/ImageCache/raw/master/Logo/foryou.gif
 >Tip:
 >>在GitHub的**issue**中使用该语法是可以实时点击复选框来勾选或解除勾选的，而无需修改issue原文。
 
-##块引用
+## 块引用
 
-###常用于引用文本
-####文本摘自《深入理解计算机系统》P27
+### 常用于引用文本
+#### 文本摘自《深入理解计算机系统》P27
 　令人吃惊的是，在哪种字节顺序是合适的这个问题上，人们表现得非常情绪化。实际上术语“little endian”（小端）和“big endian”（大端）出自Jonathan Swift的《格利佛游记》一书，其中交战的两个派别无法就应该从哪一端打开一个半熟的鸡蛋达成一致。因此，争论沦为关于社会政治的争论。只要选择了一种规则并且始终如一的坚持，其实对于哪种字节排序的选择都是任意的。
 >**“端”（endian）的起源**  
 以下是Jonathan Swift在1726年关于大小端之争历史的描述：  
@@ -255,7 +267,7 @@ https://github.com/guodongxiaren/ImageCache/raw/master/Logo/foryou.gif
 >>>>平衡二叉树
 >>>>>满二叉树
 
-代码高亮
+# 代码高亮
 ----------
 在三个反引号后面加上编程语言的名字，另起一行开始写代码，最后一行再加上三个反引号。
 ```Java
@@ -273,7 +285,8 @@ document.getElementById("myH1").innerHTML="Welcome to my Homepage"; //javascipt
 ```cpp
 string &operator+(const string& A,const string& B) //cpp
 ```
-表格
+
+# 表格
 --------
 
 表头1  | 表头2
@@ -286,7 +299,7 @@ string &operator+(const string& A,const string& B) //cpp
 | 表格单元   | 表格单元   |
 | 表格单元   | 表格单元   |
 
-###对齐
+### 对齐
 表格可以指定对齐方式
 
 | 左对齐 | 居中  | 右对齐 |
@@ -295,22 +308,22 @@ string &operator+(const string& A,const string& B) //cpp
 | col 2 is      | centered        |   $12 |
 | zebra stripes | are neat        |    $1 |
 
-###混合其他语法
+### 混合其他语法
 表格单元中的内容可以和其他大多数GFM语法配合使用，如：  
-####使用普通文本的删除线，斜体等效果
+#### 使用普通文本的删除线，斜体等效果
 
 | 名字 | 描述          |
 | ------------- | ----------- |
 | Help      | ~~Display the~~ help window.|
 | Close     | _Closes_ a window     |
-####表格中嵌入图片（链接）
+#### 表格中嵌入图片（链接）
 其实前面介绍图片显示、图片链接的时候为了清晰就是放在在表格中显示的。
 
 | 图片 | 描述 |
 | ---- | ---- |
 |![baidu][baidu-logo] | 百度
 
-表情
+# 表情
 ----------
 Github的Markdown语法支持添加emoji表情，输入不同的符号码（两个冒号包围的字符）可以显示出不同的表情。
 
