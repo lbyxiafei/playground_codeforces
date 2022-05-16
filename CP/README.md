@@ -72,9 +72,53 @@ int count(vector<vector<int>>& g, int target){
 ## 区间
 ### 单点区间插入
 - 可以运用二分、set进行查询优化，由于插入的点只会和前后两个区间有关联，所以时间复杂度是`O(log(n))`
-### 连续区间插入
+- 题：[LC352.Data stream as disjoint intervals](https://leetcode.com/problems/data-stream-as-disjoint-intervals/)
+- 注：可纳入多个连续区间插入问题，参考最终模板
+### 单个连续区间插入
 - 先插入，再合并
 - 查询、插入的时间复杂度可以达到`O(log(n))`（二分），但由于连续区间可以覆盖n个区间，所以合并过程时间复杂度`O(N)`
+- 题：[LC57.Insert Interval](https://leetcode.com/problems/insert-interval/)
+- 注1：可纳入多个连续区间插入问题，参考最终模板
+- 注2：如果是合并多个相互覆盖的区间，则是`双指针`问题，如题：[LC56.Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+    ```cpp merge_intervals
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        sort(intervals.begin(),intervals.end());
+        int n=intervals.size();
+        vector<vector<int>> res;
+        for(int i=0; i<n; i++){
+            int j=i+1, a=intervals[i][0], b=intervals[i][1];
+            while(j<n && intervals[j][0]<=b){
+                b=max(b,intervals[j++][1]);
+            }
+            i=j-1;
+            res.push_back({a,b});
+        }
+        return res;
+    }
+    ```
+### 多个连续区间插入
+- 最终模板
+    ```cpp intervals
+    void addRange(int left, int right) {
+        auto it=S.lower_bound({left,left});
+        if(it!=S.begin()) it--;
+        vector<pii> to_erase;
+        for(; it!=S.end(); it++){
+            if(it->first > right) break;
+            if(it->second < left) continue;
+            left=min(left,it->first);
+            right=max(right,it->second);
+            to_erase.push_back(*it);
+        }
+        for(auto&& e:to_erase){
+            S.erase(e);
+        }
+        S.insert({left,right});
+    }
+    ```
+- 题：[LC715.Range Module](https://leetcode.com/problems/range-module/)，[LC2276.Count intergers in 
+intervals](https://leetcode.com/problems/count-integers-in-intervals/)
+- 引申：[珂朵莉树/老司机（ODT）树](https://oi-wiki.org/ds/odt/)
 ## 排序
 ### 快速选择
 - 给定无序数组，求从小到大的第k个数，例题：[AC.第k个数](https://www.acwing.com/activity/content/problem/content/820/)
