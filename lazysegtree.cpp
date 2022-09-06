@@ -1,4 +1,5 @@
 // ref: https://codeforces.com/blog/entry/82400
+// 此处的mapping(int t,int x)用的是int t，更加general的写法是struct t，以借助完成更复杂的操作
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -224,11 +225,30 @@ int main() {
     // fourth type(second int here) is the element type used in apply mapping func
     lazy_segtree<int, op, e, int, mapping, composition, id> seg(arr);
 
-    
+    auto out=[&](){
+        for(int i=0; i<arr.size(); i++) cout << seg.get(i) << ' ';
+        cout << endl;
+    };
 
-    for(int i=0; i<arr.size(); i++) cout << seg.get(i) << ' ';
-    cout << endl;
+    out();
 
+    // apply(l,r,t) 所有[l,r)内元素乘以t
+    // 这里t是mapping的第一个元素，以及segtree的第四个type
+    seg.apply(0,arr.size(),2);
+    out(); // 2, 4, 6, 8, 10
+
+    // apply(idx,t) 第idx的元素乘以t
+    seg.apply(0,2);
+    out(); // 4, 4, 6, 8, 10
+
+    // set(idx,x);
+    seg.set(0,1);
+    out(); // 1, 4, 6, 8, 10
+
+    // prod(l,r) 返回[l,r)的op结果，此处即求和
+    cout << seg.prod(0,2) << endl; // 5
+    // all_prod() 全区间求和
+    cout << seg.all_prod() << endl; // 29
 
     return 0;
 }
