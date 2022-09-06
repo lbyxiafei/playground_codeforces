@@ -162,5 +162,10 @@ int main() {
     target = 6;
     cout << seg.min_left<check>(4) << endl; // 0 -> [0,4)内所有元素均小于target(6)
 
+    // set
+    cout << endl;
+    seg.set(0,11);
+    cout << seg.all_prod() << endl; // 11
+
     return 0;
 }
