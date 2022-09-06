@@ -1,3 +1,4 @@
+// ref: https://codeforces.com/blog/entry/82400
 #include <bits/stdc++.h>
 
 #define forn(i, n) for (int i = 0; i < int(n); i++)
@@ -124,12 +125,14 @@ template <class S, S (*op)(S, S), S (*e)()> struct segtree {
     void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
 };
 
+// prod(l,r) will return max element from [l,r)
 int op(int a, int b) { return max(a, b); }
 
+// prod(i,i) will return -1
 int e() { return -1; }
 
+// helper func for max_right(l) and min_left(r)
 int target;
-
 bool check(int v) { return v < target; }
 
 int main() {
@@ -166,6 +169,10 @@ int main() {
     cout << endl;
     seg.set(0,11);
     cout << seg.all_prod() << endl; // 11
+
+    // out
+    for(int i=0; i<arr.size(); i++) cout << seg.get(i) << ' ';
+    cout << endl;
 
     return 0;
 }
