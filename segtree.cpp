@@ -19,6 +19,7 @@ namespace internal {
     }
 }
 
+// 0-index based, 左闭右开 [l, r)
 template <class S, S (*op)(S, S), S (*e)()> struct segtree {
   public:
     segtree() : segtree(0) {}
@@ -123,17 +124,43 @@ template <class S, S (*op)(S, S), S (*e)()> struct segtree {
     void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
 };
 
+int op(int a, int b) { return max(a, b); }
+
+int e() { return -1; }
+
+int target;
+
+bool check(int v) { return v < target; }
+
 int main() {
 #ifdef _LBY
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
 #endif
 
-    int T;
-    cin >> T;
-    forn(_, T) {
-        cout << '!';
-    }
+    vector<int> arr{1,3,2,5,4,8,7,10};
+
+    segtree<int, op, e> seg(arr);
+
+    // op定义：求区间最大值
+    cout << seg.all_prod() << endl; // 10
+    cout << seg.prod(0,0) << endl;  // e(): -1
+    cout << seg.prod(0,1) << endl;  // 1
+    cout << seg.prod(0,2) << endl;  // 3
+    cout << seg.prod(0,3) << endl;  // 3
+    cout << seg.prod(0,4) << endl;  // 5
+
+    cout << endl;
+
+    // max_right(l): 给定bool check(x)，返回r，使得：[l,r)区间内的元素统统满足check(x)
+    // 注：check函数必须满足check(e())===true
+    target = 5;
+    cout << seg.max_right<check>(0) << endl; // 3 -> [0,3)内所有元素均小于target(5)
+
+
+    // 类似的，min_left(r)：给定bool check(x)，返回l，使得[l,r)内所有元素满足check(x)
+    target = 6;
+    cout << seg.min_left<check>(4) << endl; // 0 -> [0,4)内所有元素均小于target(6)
 
     return 0;
 }
